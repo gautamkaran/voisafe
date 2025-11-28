@@ -1,0 +1,21 @@
+{
+  "name": "voisafe-backend",
+  "version": "1.0.0",
+  "description": "Backend API for VoiSafe, providing anonymous complaint submission, JWT authentication, real-time notifications, and a 5-minute identity reveal system.",
+  "keywords": [
+    "voisafe"
+  ],
+  "license": "ISC",
+  "author": "gautamkaran",
+  "type": "module",
+  "main": "src/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.1"
+  }
+}
