@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "VoiSafe backend is developed using Node.js, Express, and MongoDB with JWT security, identity decoupling, and real-time chat using Socket.IO.",
+  "license": "ISC",
+  "author": "gautamkaran",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "test",
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "mongoose": "^9.3.3"
+  }
+}
