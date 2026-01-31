@@ -13,7 +13,7 @@ import {
     X
 } from "lucide-react";
 
-import { getUser, logout } from "@/lib/auth";
+import { getUser, logout, isAdmin } from "@/lib/auth";
 import { User } from "@/types";
 import { Button } from "@/components/ui/Button";
 
@@ -36,11 +36,20 @@ export default function DashboardLayout({
         }
     }, [router]);
 
-    const navigation = [
+    const studentNavigation = [
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Submit Complaint", href: "/submit-complaint", icon: FileText },
         { name: "My Complaints", href: "/my-complaints", icon: List },
     ];
+
+    const adminNavigation = [
+        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+        // Future admin routes can be added here
+        // { name: "Reports", href: "/reports", icon: BarChart },
+        // { name: "Settings", href: "/settings", icon: Settings },
+    ];
+
+    const navigation = isAdmin() ? adminNavigation : studentNavigation;
 
     const handleLogout = () => {
         logout();

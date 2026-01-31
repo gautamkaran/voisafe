@@ -6,6 +6,7 @@ import { Search, MessageSquare, Eye } from "lucide-react";
 
 import { Complaint } from "@/types";
 import { complaintAPI } from "@/lib/api";
+import { isAdmin } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -19,8 +20,15 @@ export default function MyComplaintsPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        // Redirect admins to dashboard
+        if (isAdmin()) {
+            router.push("/dashboard");
+            return;
+        }
+
+        // Only fetch if not admin
         fetchComplaints();
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         if (searchQuery.trim()) {
