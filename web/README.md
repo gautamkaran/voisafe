@@ -1,36 +1,159 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VoiSafe Frontend
 
-## Getting Started
+Modern Next.js 14/15 frontend for VoiSafe - Anonymous Grievance SaaS Platform
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- ✅ **Multi-step Complaint Submission** - React Hook Form + Zod validation
+- ✅ **Anonymous Chat** - Socket.io real-time messaging
+- ✅ **Tracking System** - Dynamic routes with status timeline
+- ✅ **Server Actions** - Form submission with Next.js Server Actions
+- ✅ **Middleware Protection** - Route-based authentication
+- ✅ **Responsive Design** - Mobile-first with Tailwind CSS
+- ✅ **Type Safety** - Full TypeScript support
+
+## 📁 Folder Structure
+
+```
+web/
+├── app/
+│   ├── (auth)/
+│   │   ├── login/page.tsx          # Login page
+│   │   └── layout.tsx              # Auth layout
+│   ├── (dashboard)/
+│   │   ├── dashboard/page.tsx      # Dashboard overview
+│   │   ├── submit-complaint/page.tsx  # Multi-step form
+│   │   ├── my-complaints/page.tsx  # Complaints list
+│   │   ├── track/[trackingId]/page.tsx  # Tracking page
+│   │   ├── chat/[trackingId]/page.tsx   # Anonymous chat
+│   │   └── layout.tsx              # Dashboard layout
+│   ├── layout.tsx                  # Root layout
+│   └── globals.css                 # Global styles
+├── components/
+│   └── ui/
+│       ├── Button.tsx              # Reusable button
+│       ├── Input.tsx               # Form input
+│       ├── Textarea.tsx            # Textarea
+│       └── Card.tsx                # Card component
+├── lib/
+│   ├── api.ts                      # Axios API client
+│   ├── socket.ts                   # Socket.io client
+│   ├── auth.ts                     # Auth helpers
+│   └── utils.ts                    # Utility functions
+├── types/
+│   └── index.ts                    # TypeScript types
+├── schemas/
+│   └── complaint.ts                # Zod schemas
+├── middleware.ts                   # Route protection
+├── .env.local                      # Environment variables
+└── package.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Configure environment:**
+   ```bash
+   # .env.local
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
+   ```
 
-## Learn More
+3. **Run development server:**
+   ```bash
+   npm run dev
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. **Open browser:**
+   ```
+   http://localhost:3000
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🔐 Anonymous Chat Implementation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Identity Protection
+- Socket.io connections use **trackingId** instead of userId
+- Messages show **role** (student/admin) without revealing identity
+- No PII stored in chat messages
 
-## Deploy on Vercel
+### Socket.io Events
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**Client → Server:**
+- `join_chat` - Join complaint chat room
+- `send_message` - Send message
+- `typing` - Typing indicator
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Server → Client:**
+- `chat_history` - Get message history
+- `message_received` - New message
+- `user_typing` - User is typing
+
+## 📋 Multi-Step Complaint Form
+
+### Steps:
+1. **Details** - Title and description
+2. **Category** - Select complaint category
+3. **Review** - Review before submission
+4. **Success** - Display trackingId
+
+### Validation:
+- Zod schema validation
+- React Hook Form integration
+- Real-time error messages
+
+## 🎨 UI/UX Features
+
+- **Responsive Design** - Mobile, tablet, desktop
+- **Loading States** - Skeleton screens and spinners
+- **Toast Notifications** - Success/error messages (Sonner)
+- **Status Badges** - Color-coded complaint status
+- **Typing Indicators** - Real-time chat feedback
+- **Auto-scroll** - Chat messages
+
+## 🔒 Security
+
+- **JWT Authentication** - Stored in localStorage
+- **Axios Interceptors** - Auto-attach tokens
+- **Middleware Protection** - Route-based access control
+- **Anonymous Submissions** - No identity in complaint data
+
+## 📦 Dependencies
+
+- **next** - React framework
+- **react-hook-form** - Form management
+- **zod** - Schema validation
+- **socket.io-client** - Real-time chat
+- **axios** - HTTP client
+- **lucide-react** - Icons
+- **sonner** - Toast notifications
+- **date-fns** - Date formatting
+- **tailwindcss** - Styling
+
+## 🎓 For Examiners
+
+### Modern Next.js Best Practices
+
+1. **App Router** - Using Next.js 14/15 App Router
+2. **Server Components** - Default for layouts and static pages
+3. **Client Components** - Only for interactivity (forms, chat)
+4. **Server Actions** - Form submission (can be added)
+5. **Middleware** - Route protection
+6. **TypeScript** - Full type safety
+7. **Modular Code** - Reusable components and utilities
+
+### Key Implementation Highlights
+
+- ✅ **Identity Decoupling** - trackingId-based system
+- ✅ **Real-time Chat** - Socket.io with anonymous messaging
+- ✅ **Form Validation** - Zod + React Hook Form
+- ✅ **Responsive UI** - Tailwind CSS
+- ✅ **Error Handling** - Toast notifications
+- ✅ **Loading States** - User feedback
+
+---
+
+**VoiSafe Frontend** - Empowering students to speak up safely! 🚀

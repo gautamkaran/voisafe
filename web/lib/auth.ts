@@ -1,0 +1,90 @@
+import { User } from "@/types";
+
+/**
+ * AUTH HELPER FUNCTIONS
+ * 
+ * Client-side authentication utilities
+ */
+
+/**
+ * Save auth data to localStorage
+ */
+export function saveAuth(token: string, user: User): void {
+    if (typeof window === "undefined") return;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+}
+
+/**
+ * Get current user from localStorage
+ */
+export function getUser(): User | null {
+    if (typeof window === "undefined") return null;
+
+    const userStr = localStorage.getItem("user");
+    if (!userStr) return null;
+
+    try {
+        return JSON.parse(userStr);
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Get auth token from localStorage
+ */
+export function getToken(): string | null {
+    if (typeof window === "undefined") return null;
+
+    return localStorage.getItem("token");
+}
+
+/**
+ * Check if user is authenticated
+ */
+export function isAuthenticated(): boolean {
+    return !!getToken();
+}
+
+/**
+ * Logout user
+ */
+export function logout(): void {
+    if (typeof window === "undefined") return;
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    // Redirect to login
+    window.location.href = "/login";
+}
+
+/**
+ * Check if user has specific role
+ */
+export function hasRole(role: string | string[]): boolean {
+    const user = getUser();
+    if (!user) return false;
+
+    if (Array.isArray(role)) {
+        return role.includes(user.role);
+    }
+
+    return user.role === role;
+}
+
+/**
+ * Check if user is student
+ */
+export function isStudent(): boolean {
+    return hasRole("student");
+}
+
+/**
+ * Check if user is admin
+ */
+export function isAdmin(): boolean {
+    return hasRole(["admin", "committee-admin"]);
+}
