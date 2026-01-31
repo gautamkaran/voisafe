@@ -1,12 +1,65 @@
 "use client";
 
-import { FileText, AlertTriangle, CheckCircle, Clock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+    FileText,
+    AlertTriangle,
+    CheckCircle,
+    Clock,
+    TrendingUp,
+    Building,
+    AlertCircle
+} from "lucide-react";
+
+import { complaintAPI } from "@/lib/api";
+import { Complaint } from "@/types";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { getStatusColor } from "@/lib/utils";
+import { getUser } from "@/lib/auth";
 
 export default function AdminDashboardPage() {
+    const router = useRouter();
+    const [complaints, setComplaints] = useState<Complaint[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [user, setUser] = useState<any>(null);
+
+    useEffect(() => {
+        const currentUser = getUser();
+        setUser(currentUser);
+        fetchAllComplaints();
+    }, []);
+
+    const fetchAllComplaints = async () => {
+        try {
+            // Admin endpoint to fetch ALL complaints
+            const response = await complaintAPI.getAllComplaints();
+            if (response.data.success) {
+                setComplaints(response.data.data.complaints);
+            }
+        } catch (error) {
+            console.error("Failed to fetch admin complaints:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const stats = {
+        total: complaints.length,
+        pending: complaints.filter((c) => c.status === "pending").length,
+        resolved: complaints.filter((c) => c.status === "resolved").length,
+        urgent: complaints.filter((c) => c.priority === "urgent").length,
+    };
+
     return (
         <div className="space-y-8">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+                    <p className="text-gray-600">Overview of {user?.college} grievances</p>
+                </div>
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
                     Download Report
                 </button>
@@ -14,19 +67,73 @@ export default function AdminDashboardPage() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <StatCard title="Total Complaints" value="156" icon={FileText} color="blue" />
-                <StatCard title="Pending" value="23" icon={Clock} color="amber" />
-                <StatCard title="Urgent" value="5" icon={AlertTriangle} color="red" />
-                <StatCard title="Resolved" value="128" icon={CheckCircle} color="green" />
+                <StatCard title="Total Complaints" value={stats.total.toString()} icon={FileText} color="blue" />
+                <StatCard title="Pending" value={stats.pending.toString()} icon={Clock} color="amber" />
+                <StatCard title="Urgent" value={stats.urgent.toString()} icon={AlertTriangle} color="red" />
+                <StatCard title="Resolved" value={stats.resolved.toString()} icon={CheckCircle} color="green" />
             </div>
 
-            {/* Recent Activity */}
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Complaints</h2>
-                <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-lg dashed border border-gray-200">
-                    Recent complaints list will appear here.
-                </div>
-            </div>
+            {/* Recent Complaints Table */}
+            <Card>
+                <CardHeader>
+                    <div className="flex items-center justify-between">
+                        <CardTitle>Recent Grievances</CardTitle>
+                        <Button variant="outline" size="sm" onClick={() => router.push('/admin/complaints')}>View All</Button>
+                    </div>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <div className="flex justify-center py-8">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                        </div>
+                    ) : complaints.length === 0 ? (
+                        <div className="text-center py-12">
+                            <p className="text-gray-500">No complaints found for your college.</p>
+                        </div>
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                                    <tr>
+                                        <th className="px-4 py-3">Tracking ID</th>
+                                        <th className="px-4 py-3">Title</th>
+                                        <th className="px-4 py-3">Category</th>
+                                        <th className="px-4 py-3">Status</th>
+                                        <th className="px-4 py-3">Priority</th>
+                                        <th className="px-4 py-3">Date</th>
+                                        <th className="px-4 py-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {complaints.slice(0, 10).map((complaint) => (
+                                        <tr key={complaint._id} className="bg-white border-b hover:bg-gray-50">
+                                            <td className="px-4 py-3 font-medium text-gray-900">{complaint.trackingId}</td>
+                                            <td className="px-4 py-3 truncate max-w-[200px]">{complaint.title}</td>
+                                            <td className="px-4 py-3 capitalize">{complaint.category.replace("-", " ")}</td>
+                                            <td className="px-4 py-3">
+                                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${getStatusColor(complaint.status)}`}>
+                                                    {complaint.status}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3 capitalize">
+                                                <span className={complaint.priority === 'urgent' ? 'text-red-600 font-bold' : ''}>
+                                                    {complaint.priority}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-3">{new Date(complaint.createdAt).toLocaleDateString()}</td>
+                                            <td className="px-4 py-3">
+                                                <Link href={`/track/${complaint.trackingId}`} className="font-medium text-blue-600 hover:underline">
+                                                    Manage
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 }

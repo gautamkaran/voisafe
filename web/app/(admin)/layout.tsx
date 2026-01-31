@@ -1,15 +1,36 @@
 "use client";
 
 import RoleGuard from "@/components/auth/RoleGuard";
+import VerificationPending from "@/components/auth/VerificationPending";
 import { LayoutDashboard, Users, FileText, Settings, LogOut, ShieldCheck } from "lucide-react";
-import { logout, getUser } from "@/lib/auth";
+import { logout, getUser, getOrganization } from "@/lib/auth";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function AdminLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
+    const [isVerified, setIsVerified] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
+    const user = getUser();
+    const organization = getOrganization();
+
+    useEffect(() => {
+        // specific check: if organization data exists but isVerified is false
+        if (organization && organization.isVerified === false) {
+            setIsVerified(false);
+        }
+        setIsLoading(false);
+    }, []);
+
+    if (isLoading) return null;
+
+    if (!isVerified) {
+        return <VerificationPending orgName={organization?.name} />;
+    }
+
     // Org Admin Navigation
     const navigation = [
         { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -18,7 +39,7 @@ export default function AdminLayout({
         { name: "Settings", href: "/admin/settings", icon: Settings },
     ];
 
-    const user = getUser();
+
 
     return (
         <RoleGuard allowedRoles={["admin"]}>

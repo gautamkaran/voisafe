@@ -124,8 +124,55 @@ const enforceCollegeAccess = (req, res, next) => {
     next();
 };
 
+/**
+ * Check if the user's organization is verified
+ */
+const isOrgVerified = async (req, res, next) => {
+    try {
+        if (!req.user.orgId) {
+            // If no orgId, maybe they are super admin or legacy user.
+            // Strict check: if role is student/admin/committee, they MUST belong to an verified Org.
+            if (['student', 'admin', 'committee-admin', 'org-admin'].includes(req.user.role)) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Institutional access is pending. Organization not identified.'
+                });
+            }
+            return next();
+        }
+
+        const Organization = require('../models/Organization');
+        const org = await Organization.findById(req.user.orgId);
+
+        if (!org) {
+            return res.status(404).json({
+                success: false,
+                message: 'Organization not found.'
+            });
+        }
+
+        if (!org.isVerified) {
+            return res.status(403).json({
+                success: false,
+                message: 'Institutional access is currently pending approval. Please contact VoiSafe support.'
+            });
+        }
+
+        req.organization = org; // Attach full org object for convenience
+        next();
+
+    } catch (error) {
+        console.error('Organization verification error:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to verify organization status.'
+        });
+    }
+};
+
 module.exports = {
     authenticate,
     authorize,
-    enforceCollegeAccess
+    enforceCollegeAccess,
+    isOrgVerified
 };

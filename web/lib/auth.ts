@@ -9,11 +9,33 @@ import { User } from "@/types";
 /**
  * Save auth data to localStorage
  */
-export function saveAuth(token: string, user: User): void {
+export function saveAuth(token: string, user: User, organization?: any): void {
     if (typeof window === "undefined") return;
 
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
+
+    if (organization) {
+        localStorage.setItem("organization", JSON.stringify(organization));
+    } else {
+        localStorage.removeItem("organization");
+    }
+}
+
+/**
+ * Get current organization from localStorage
+ */
+export function getOrganization(): any | null {
+    if (typeof window === "undefined") return null;
+
+    const orgStr = localStorage.getItem("organization");
+    if (!orgStr) return null;
+
+    try {
+        return JSON.parse(orgStr);
+    } catch {
+        return null;
+    }
 }
 
 /**
@@ -56,6 +78,7 @@ export function logout(): void {
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("organization");
 
     // Redirect to login
     window.location.href = "/login";

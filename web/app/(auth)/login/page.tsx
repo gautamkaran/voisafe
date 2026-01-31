@@ -38,10 +38,10 @@ export default function LoginPage() {
             const response = await authAPI.login(data.email, data.password);
 
             if (response.data.success) {
-                const { token, user } = response.data.data;
+                const { token, user, organization } = response.data.data;
 
                 // Save auth data
-                saveAuth(token, user);
+                saveAuth(token, user, organization);
 
                 toast.success("Login successful!");
 

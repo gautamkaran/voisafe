@@ -13,7 +13,8 @@ const {
 const {
     authenticate,
     authorize,
-    enforceCollegeAccess
+    enforceCollegeAccess,
+    isOrgVerified
 } = require('../middleware/authMiddleware');
 
 /**
@@ -43,6 +44,7 @@ router.use(enforceCollegeAccess);
 router.post(
     '/',
     authorize('student'),
+    isOrgVerified,
     fileComplaint
 );
 

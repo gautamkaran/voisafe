@@ -14,7 +14,7 @@ import {
     X
 } from "lucide-react";
 
-import { getUser, logout, isAdmin } from "@/lib/auth";
+import { getUser, logout } from "@/lib/auth";
 import { User } from "@/types";
 import { Button } from "@/components/ui/Button";
 
@@ -33,25 +33,18 @@ export default function DashboardLayout({
         setUser(currentUser);
     }, [router]);
 
-    // Navigation arrays...
-    const studentNavigation = [
+    const navigation = [
         { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
         { name: "Submit Complaint", href: "/submit-complaint", icon: FileText },
         { name: "My Complaints", href: "/my-complaints", icon: List },
     ];
-
-    const adminNavigation = [
-        { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    ];
-
-    const navigation = isAdmin() ? adminNavigation : studentNavigation;
 
     const handleLogout = () => {
         logout();
     };
 
     return (
-        <RoleGuard allowedRoles={['student', 'admin']}>
+        <RoleGuard allowedRoles={['student']}>
             <div className="min-h-screen bg-gray-50">
                 {/* ... rest of the layout ... */}
 

@@ -57,6 +57,12 @@ const organizationSchema = new mongoose.Schema({
         default: 'active'
     },
 
+    // Verification Status (Requires Super Admin Approval)
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
     // Settings (Extensible for future features)
     settings: {
         logoUrl: String,

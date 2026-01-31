@@ -152,15 +152,20 @@ const login = async (req, res, next) => {
             });
         }
 
+        console.log(`[LOGIN DEBUG] Attempt for email: '${email}'`);
+
         // Find user (include password for comparison)
         const user = await User.findOne({ email }).select('+password');
 
         if (!user) {
+            console.log(`[LOGIN DEBUG] User not found for email: '${email}'`);
             return res.status(401).json({
                 success: false,
                 message: 'Invalid credentials'
             });
         }
+
+        console.log(`[LOGIN DEBUG] User found: ${user._id}, Role: ${user.role}, Hash: ${user.password?.substring(0, 10)}...`);
 
         // Check if account is active
         if (!user.isActive) {
@@ -172,6 +177,7 @@ const login = async (req, res, next) => {
 
         // Verify password
         const isPasswordCorrect = await user.comparePassword(password);
+        console.log(`[LOGIN DEBUG] Password match result: ${isPasswordCorrect}`);
 
         if (!isPasswordCorrect) {
             return res.status(401).json({
@@ -183,6 +189,19 @@ const login = async (req, res, next) => {
         // Generate token
         const token = generateToken(user._id);
 
+        // Fetch Organization Status
+        let orgStatus = { isVerified: true }; // Default for super-admins or users without orgs
+        if (user.orgId) {
+            const org = await Organization.findById(user.orgId);
+            if (org) {
+                orgStatus = {
+                    isVerified: org.isVerified,
+                    name: org.name,
+                    slug: org.slug
+                };
+            }
+        }
+
         // Update last login
         user.lastLogin = new Date();
         await user.save();
@@ -192,7 +211,8 @@ const login = async (req, res, next) => {
             message: 'Login successful',
             data: {
                 user: user.toSafeObject(),
-                token
+                token,
+                organization: orgStatus
             }
         });
 
