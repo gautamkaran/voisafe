@@ -6,7 +6,7 @@ export interface User {
     _id: string;
     name: string;
     email: string;
-    role: "student" | "admin" | "committee-admin";
+    role: "student" | "admin" | "committee-admin" | "super-admin";
     college: string;
     studentId?: string;
     department?: string;
