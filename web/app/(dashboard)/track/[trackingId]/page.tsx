@@ -108,27 +108,27 @@ export default function TrackComplaintPage() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Title</label>
+                        <label className="text-sm font-medium text-gray-900">Title</label>
                         <p className="mt-1 text-gray-900">{complaint.title}</p>
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Category</label>
+                        <label className="text-sm font-medium text-gray-900">Category</label>
                         <p className="mt-1 text-gray-900 capitalize">{complaint.category.replace("-", " ")}</p>
                     </div>
 
                     <div>
-                        <label className="text-sm font-medium text-gray-700">Description</label>
+                        <label className="text-sm font-medium text-gray-900">Description</label>
                         <p className="mt-1 text-gray-900 whitespace-pre-wrap">{complaint.description}</p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4 pt-4 border-t">
                         <div>
-                            <label className="text-sm font-medium text-gray-700">Submitted</label>
+                            <label className="text-sm font-medium text-gray-900">Submitted</label>
                             <p className="mt-1 text-gray-900">{formatDateTime(complaint.createdAt)}</p>
                         </div>
                         <div>
-                            <label className="text-sm font-medium text-gray-700">Last Updated</label>
+                            <label className="text-sm font-medium text-gray-900">Last Updated</label>
                             <p className="mt-1 text-gray-900">{formatDateTime(complaint.updatedAt)}</p>
                         </div>
                     </div>

@@ -110,7 +110,7 @@ export default function MyComplaintsPage() {
                                             {complaint.description}
                                         </p>
 
-                                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                                        <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                                             <div>
                                                 <span className="font-medium">Tracking ID:</span>{" "}
                                                 <code className="text-blue-600 font-mono">{complaint.trackingId}</code>

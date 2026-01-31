@@ -77,7 +77,7 @@ export default function DashboardLayout({
                             onClick={() => setIsSidebarOpen(false)}
                             className="lg:hidden"
                         >
-                            <X className="w-6 h-6" />
+                            <X className="w-6 h-6 text-gray-900" />
                         </button>
                     </div>
 
@@ -90,8 +90,8 @@ export default function DashboardLayout({
                                     key={item.name}
                                     href={item.href}
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                                            ? "bg-blue-50 text-blue-600 font-medium"
-                                            : "text-gray-700 hover:bg-gray-50"
+                                        ? "bg-blue-50 text-blue-600 font-medium"
+                                        : "text-gray-700 hover:bg-gray-50"
                                         }`}
                                     onClick={() => setIsSidebarOpen(false)}
                                 >
@@ -137,9 +137,9 @@ export default function DashboardLayout({
                         onClick={() => setIsSidebarOpen(true)}
                         className="p-2 -ml-2 rounded-lg hover:bg-gray-100"
                     >
-                        <Menu className="w-6 h-6" />
+                        <Menu className="w-6 h-6 text-gray-900" />
                     </button>
-                    <h1 className="ml-4 text-lg font-semibold">VoiSafe</h1>
+                    <h1 className="ml-4 text-lg font-semibold text-gray-900">VoiSafe</h1>
                 </header>
 
                 {/* Page content */}

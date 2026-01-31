@@ -87,17 +87,25 @@ export default function SubmitComplaintPage() {
             </div>
 
             {/* Progress Steps */}
-            <div className="mb-8">
-                <div className="flex items-center justify-between">
+            {/* Progress Steps */}
+            <div className="mb-12">
+                <div className="flex items-center">
                     {[1, 2, 3].map((num) => (
-                        <div key={num} className="flex items-center flex-1">
-                            <div
-                                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${step >= num
+                        <div key={num} className={`flex items-center ${num === 3 ? "" : "flex-1"}`}>
+                            <div className="relative flex flex-col items-center">
+                                <div
+                                    className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors z-10 ${step >= num
                                         ? "bg-blue-600 border-blue-600 text-white"
-                                        : "border-gray-300 text-gray-400"
-                                    }`}
-                            >
-                                {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
+                                        : "bg-white border-gray-300 text-gray-500 font-medium"
+                                        }`}
+                                >
+                                    {step > num ? <CheckCircle2 className="w-5 h-5" /> : num}
+                                </div>
+                                <div className="absolute top-12 whitespace-nowrap text-xs font-bold text-gray-900">
+                                    {num === 1 && "Details"}
+                                    {num === 2 && "Category"}
+                                    {num === 3 && "Review"}
+                                </div>
                             </div>
                             {num < 3 && (
                                 <div
@@ -107,11 +115,6 @@ export default function SubmitComplaintPage() {
                             )}
                         </div>
                     ))}
-                </div>
-                <div className="flex justify-between mt-2">
-                    <span className="text-xs text-gray-600">Details</span>
-                    <span className="text-xs text-gray-600">Category</span>
-                    <span className="text-xs text-gray-600">Review</span>
                 </div>
             </div>
 
@@ -169,8 +172,8 @@ export default function SubmitComplaintPage() {
                                         type="button"
                                         onClick={() => setValue("category", category.value as any)}
                                         className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${selectedCategory === category.value
-                                                ? "border-blue-600 bg-blue-50"
-                                                : "border-gray-200 hover:border-gray-300"
+                                            ? "border-blue-600 bg-blue-50"
+                                            : "border-gray-200 hover:border-gray-300"
                                             }`}
                                     >
                                         <div className={`p-3 rounded-lg ${category.color}`}>
@@ -222,19 +225,19 @@ export default function SubmitComplaintPage() {
 
                             <div className="space-y-4">
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Title</label>
+                                    <label className="text-sm font-medium text-gray-900">Title</label>
                                     <p className="mt-1 text-gray-900">{watch("title")}</p>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Category</label>
+                                    <label className="text-sm font-medium text-gray-900">Category</label>
                                     <p className="mt-1 text-gray-900">
                                         {categories.find((c) => c.value === selectedCategory)?.label}
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700">Description</label>
+                                    <label className="text-sm font-medium text-gray-900">Description</label>
                                     <p className="mt-1 text-gray-900 whitespace-pre-wrap">{watch("description")}</p>
                                 </div>
                             </div>
