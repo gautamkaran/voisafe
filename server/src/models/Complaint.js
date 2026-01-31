@@ -72,10 +72,18 @@ const complaintSchema = new mongoose.Schema({
         default: 'pending'
     },
 
-    // Multi-tenant Support
+    // Multi-Tenant Isolation
+    orgId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: false // Temporarily false
+    },
+
+    // College Name (Legacy/Display)
     college: {
         type: String,
         required: true,
+        trim: true,
         index: true // Fast filtering by college
     },
 
@@ -148,6 +156,8 @@ const complaintSchema = new mongoose.Schema({
 
 // INDEXES for efficient queries
 complaintSchema.index({ trackingId: 1 }); // Primary lookup method
+complaintSchema.index({ orgId: 1 }); // Efficient filtering by tenant
+complaintSchema.index({ orgId: 1, status: 1 }); // Status dashboard queries
 complaintSchema.index({ college: 1, status: 1 }); // Admin dashboard filtering
 complaintSchema.index({ category: 1, college: 1 }); // Category-based filtering
 complaintSchema.index({ createdAt: -1 }); // Recent complaints first

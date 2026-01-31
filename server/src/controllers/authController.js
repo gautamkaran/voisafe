@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Organization = require('../models/Organization');
 const jwt = require('jsonwebtoken');
 
 /**
@@ -32,7 +33,7 @@ const register = async (req, res, next) => {
             email,
             password,
             role,
-            college,
+            college, // Name of the college
             studentId,
             department,
             year
@@ -55,13 +56,54 @@ const register = async (req, res, next) => {
             });
         }
 
-        // Create user
+        // ------------------------------------------------------------------
+        // MULTI-TENANT LOGIC
+        // ------------------------------------------------------------------
+        let orgId = null;
+        let organization = null;
+
+        // simple slug generation from college name
+        const slug = college.toLowerCase().replace(/[^a-z0-9]/g, '-');
+
+        // 1. Try to find existing Organization
+        organization = await Organization.findOne({
+            $or: [{ name: college }, { slug: slug }]
+        });
+
+        const userRole = role || 'student';
+
+        // 2. Logic for Organization Creation/Joining
+        if (organization) {
+            // Organization exists - Join it
+            orgId = organization._id;
+        } else {
+            // Organization doesn't exist
+            if (userRole === 'admin' || userRole === 'super-admin' || userRole === 'org-admin') {
+                // Admin can create a new Organization (Auto-onboarding)
+                organization = await Organization.create({
+                    name: college,
+                    slug: slug,
+                    status: 'active'
+                });
+                orgId = organization._id;
+                console.log(`🆕 New Organization Created: ${college} (${slug})`);
+            } else {
+                // Students/Committee cannot create organizations
+                return res.status(400).json({
+                    success: false,
+                    message: `Organization '${college}' not registered. Please ask your administrator to sign up first.`
+                });
+            }
+        }
+
+        // Create user with orgId
         const user = await User.create({
             name,
             email,
             password,
-            role: role || 'student',
-            college,
+            role: userRole,
+            college, // Keep legacy string for now
+            orgId,   // Link to Organization
             studentId,
             department,
             year
@@ -79,7 +121,11 @@ const register = async (req, res, next) => {
             message: 'User registered successfully',
             data: {
                 user: user.toSafeObject(),
-                token
+                token,
+                organization: {
+                    name: organization.name,
+                    slug: organization.slug
+                }
             }
         });
 

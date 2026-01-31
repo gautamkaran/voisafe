@@ -4,33 +4,20 @@ const User = require('../models/User');
 const { generateUniqueTrackingId } = require('../utils/trackingIdGenerator');
 
 /**
- * COMPLAINT CONTROLLER - IDENTITY DECOUPLING IMPLEMENTATION
- * 
- * This controller implements the core anonymity feature:
- * - Students file complaints WITHOUT their userId being stored
- * - Unique trackingId is generated for each complaint
- * - Identity mapping stored separately in ComplaintTracking (encrypted)
- * - Students access complaints using trackingId only
- * - Admins can view complaints without seeing student identity
- * - Identity revelation requires special authorization
+ * COMPLAINT CONTROLLER - MULTI-TENANT & ANONYMOUS
  */
 
 /**
  * @route   POST /api/complaints
  * @desc    File a new complaint (ANONYMOUS)
  * @access  Private (Student)
- * 
- * IDENTITY DECOUPLING LOGIC:
- * 1. Generate unique trackingId
- * 2. Create complaint WITHOUT userId
- * 3. Store trackingId <-> userId mapping in ComplaintTracking (encrypted)
- * 4. Return trackingId to student (their only reference)
  */
 const fileComplaint = async (req, res, next) => {
     try {
         const { title, description, category } = req.body;
         const userId = req.user._id;
         const college = req.user.college;
+        const orgId = req.user.orgId; // Get Org ID
 
         // Validate required fields
         if (!title || !description || !category) {
@@ -55,6 +42,7 @@ const fileComplaint = async (req, res, next) => {
             description,
             category,
             college,
+            orgId, // Link to Organization
             status: 'pending',
             // NOTE: No userId field! This is intentional for anonymity
         });
@@ -64,7 +52,8 @@ const fileComplaint = async (req, res, next) => {
             trackingId,
             userId,
             college,
-            null // No TTL - keep mapping indefinitely (can be changed)
+            orgId, // Link mapping to Organization too
+            null // No TTL
         );
 
         console.log(`✅ Complaint filed anonymously. TrackingId: ${trackingId}`);
@@ -94,8 +83,6 @@ const fileComplaint = async (req, res, next) => {
  * @route   GET /api/complaints/track/:trackingId
  * @desc    Get complaint by tracking ID (STUDENT ACCESS)
  * @access  Private (Student)
- * 
- * Students use this to check their complaint status without revealing identity
  */
 const getComplaintByTracking = async (req, res, next) => {
     try {
@@ -153,15 +140,22 @@ const getComplaintByTracking = async (req, res, next) => {
 const getMyComplaints = async (req, res, next) => {
     try {
         const userId = req.user._id;
-        const college = req.user.college;
+
+        // Use orgId filter if available, otherwise college
+        const filter = req.user.orgId
+            ? { orgId: req.user.orgId }
+            : { college: req.user.college };
 
         // Get all tracking IDs for this user
-        const trackingEntries = await ComplaintTracking.find({ college })
+        // We filter by College/Org first to optimize
+        const trackingEntries = await ComplaintTracking.find(filter)
             .select('trackingId encryptedUserId');
 
         // Filter to get only this user's tracking IDs
         const myTrackingIds = [];
         for (const entry of trackingEntries) {
+            // Decrypt and compare (slow but secure)
+            // Ideally we'd optimize this but keeping it simple for now
             if (entry.userId === userId.toString()) {
                 myTrackingIds.push(entry.trackingId);
             }
@@ -188,16 +182,13 @@ const getMyComplaints = async (req, res, next) => {
  * @route   GET /api/complaints
  * @desc    Get all complaints (ADMIN VIEW - NO IDENTITY)
  * @access  Private (Admin, Committee-Admin)
- * 
- * Admins see all complaints but WITHOUT student identity
  */
 const getAllComplaints = async (req, res, next) => {
     try {
         const { status, category, priority } = req.query;
-        const college = req.user.college;
 
-        // Build filter
-        const filter = { college };
+        // USE College Filter from Middleware (Secure & Consistent)
+        const filter = { ...req.collegeFilter };
 
         if (status) filter.status = status;
         if (category) filter.category = category;
@@ -229,20 +220,17 @@ const getComplaintById = async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        const complaint = await Complaint.findById(id);
+        // Look for complaint restricted by tenant
+        // Combine ID query with Tenant Filter
+        const complaint = await Complaint.findOne({
+            _id: id,
+            ...req.collegeFilter // Ensures admin can only see their own college's complaint
+        });
 
         if (!complaint) {
             return res.status(404).json({
                 success: false,
-                message: 'Complaint not found'
-            });
-        }
-
-        // Verify college access (multi-tenant)
-        if (complaint.college !== req.user.college) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied'
+                message: 'Complaint not found or access denied'
             });
         }
 
@@ -268,20 +256,15 @@ const updateComplaintStatus = async (req, res, next) => {
         const { status, comment } = req.body;
         const adminId = req.user._id;
 
-        const complaint = await Complaint.findById(id);
+        const complaint = await Complaint.findOne({
+            _id: id,
+            ...req.collegeFilter
+        });
 
         if (!complaint) {
             return res.status(404).json({
                 success: false,
-                message: 'Complaint not found'
-            });
-        }
-
-        // Verify college access
-        if (complaint.college !== req.user.college) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied'
+                message: 'Complaint not found or access denied'
             });
         }
 
@@ -305,11 +288,6 @@ const updateComplaintStatus = async (req, res, next) => {
  * @route   POST /api/complaints/:id/reveal-identity
  * @desc    Reveal student identity (RESTRICTED - ADMIN ONLY)
  * @access  Private (Admin only - NOT committee-admin)
- * 
- * SECURITY CRITICAL:
- * - Only full admins can reveal identity
- * - Access is logged with reason and IP
- * - Should require additional authorization in production
  */
 const revealIdentity = async (req, res, next) => {
     try {
@@ -333,20 +311,15 @@ const revealIdentity = async (req, res, next) => {
             });
         }
 
-        const complaint = await Complaint.findById(id);
+        const complaint = await Complaint.findOne({
+            _id: id,
+            ...req.collegeFilter
+        });
 
         if (!complaint) {
             return res.status(404).json({
                 success: false,
-                message: 'Complaint not found'
-            });
-        }
-
-        // Verify college access
-        if (complaint.college !== req.user.college) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied'
+                message: 'Complaint not found or access denied'
             });
         }
 
@@ -424,20 +397,15 @@ const addAdminNote = async (req, res, next) => {
             });
         }
 
-        const complaint = await Complaint.findById(id);
+        const complaint = await Complaint.findOne({
+            _id: id,
+            ...req.collegeFilter
+        });
 
         if (!complaint) {
             return res.status(404).json({
                 success: false,
-                message: 'Complaint not found'
-            });
-        }
-
-        // Verify college access
-        if (complaint.college !== req.user.college) {
-            return res.status(403).json({
-                success: false,
-                message: 'Access denied'
+                message: 'Complaint not found or access denied'
             });
         }
 

@@ -50,6 +50,13 @@ const complaintTrackingSchema = new mongoose.Schema({
         required: true
     },
 
+    // Multi-Tenant Isolation
+    orgId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: false // Temporarily false
+    },
+
     // College (for multi-tenant isolation)
     college: {
         type: String,
@@ -89,6 +96,7 @@ const complaintTrackingSchema = new mongoose.Schema({
 
 // INDEXES
 complaintTrackingSchema.index({ trackingId: 1 });
+complaintTrackingSchema.index({ orgId: 1 }); // Efficient tenant lookup
 complaintTrackingSchema.index({ college: 1 });
 
 // VIRTUAL: Get decrypted userId (use carefully!)
@@ -102,7 +110,7 @@ complaintTrackingSchema.virtual('userId').get(function () {
 });
 
 // STATIC METHOD: Create tracking entry with encrypted userId
-complaintTrackingSchema.statics.createTracking = async function (trackingId, userId, college, ttlDays = null) {
+complaintTrackingSchema.statics.createTracking = async function (trackingId, userId, college, orgId = null, ttlDays = null) {
     try {
         // Encrypt the userId
         const encryptedUserId = encrypt(userId.toString());
@@ -119,6 +127,7 @@ complaintTrackingSchema.statics.createTracking = async function (trackingId, use
             trackingId,
             encryptedUserId,
             college,
+            orgId,
             expiresAt
         });
 

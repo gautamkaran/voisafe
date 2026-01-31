@@ -49,9 +49,17 @@ const userSchema = new mongoose.Schema({
     },
 
     // Multi-tenant Support
+    // Multi-Tenant Link
+    orgId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: false // Temporarily false for migration compatibility
+    },
+
+    // Legacy / Display field (Migrate to use orgId population eventually)
     college: {
         type: String,
-        required: [true, 'College/Institution name is required'],
+        required: [true, 'College name is required'],
         trim: true
     },
 

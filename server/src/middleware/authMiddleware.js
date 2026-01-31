@@ -105,8 +105,22 @@ const authorize = (...roles) => {
  * Ensures users can only access data from their college
  */
 const enforceCollegeAccess = (req, res, next) => {
-    // Attach college filter to request
-    req.collegeFilter = { college: req.user.college };
+    // 1. Prefer Organization ID (Strict Multi-Tenancy)
+    if (req.user.orgId) {
+        req.collegeFilter = { orgId: req.user.orgId };
+    }
+    // 2. Fallback to College Name (Legacy Compatibility)
+    else if (req.user.college) {
+        req.collegeFilter = { college: req.user.college };
+    }
+    // 3. Error if neither exists
+    else {
+        return res.status(403).json({
+            success: false,
+            message: 'Access denied. No organization association found.'
+        });
+    }
+
     next();
 };
 
