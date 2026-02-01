@@ -60,7 +60,7 @@ export default function CommitteeWorkspacePage() {
                             <div
                                 key={complaint._id}
                                 className="p-6 hover:bg-slate-50 transition-colors cursor-pointer group"
-                                onClick={() => router.push(`/admin/complaints/${complaint._id}`)} // Re-using admin detail view for now
+                                onClick={() => router.push(`/committee/complaints/${complaint._id}`)}
                             >
                                 <div className="flex justify-between items-start">
                                     <div className="flex-1 min-w-0 pr-4">

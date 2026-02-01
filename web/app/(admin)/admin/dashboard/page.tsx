@@ -12,6 +12,7 @@ import {
     Building,
     AlertCircle
 } from "lucide-react";
+import { toast } from "sonner";
 
 import { complaintAPI } from "@/lib/api";
 import { Complaint } from "@/types";
@@ -60,7 +61,12 @@ export default function AdminDashboardPage() {
                     <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
                     <p className="text-gray-600">Overview of {user?.college} grievances</p>
                 </div>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+
+
+                <button
+                    onClick={() => toast.info("Report download feature coming soon!")}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
                     Download Report
                 </button>
             </div>
@@ -122,7 +128,7 @@ export default function AdminDashboardPage() {
                                             </td>
                                             <td className="px-4 py-3">{new Date(complaint.createdAt).toLocaleDateString()}</td>
                                             <td className="px-4 py-3">
-                                                <Link href={`/track/${complaint.trackingId}`} className="font-medium text-blue-600 hover:underline">
+                                                <Link href={`/admin/complaints/${complaint._id}`} className="font-medium text-blue-600 hover:underline">
                                                     Manage
                                                 </Link>
                                             </td>
