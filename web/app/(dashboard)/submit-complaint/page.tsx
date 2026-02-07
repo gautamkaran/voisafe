@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
-    FileText,
     AlertCircle,
     CheckCircle2,
     ArrowRight,
@@ -66,7 +65,7 @@ export default function SubmitComplaintPage() {
                 setStep(4); // Success step
                 toast.success("Complaint submitted successfully!");
             }
-        } catch (error: any) {
+        } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
             const message = error.response?.data?.message || "Failed to submit complaint. Please try again.";
             toast.error(message);
         } finally {
@@ -170,7 +169,7 @@ export default function SubmitComplaintPage() {
                                     <button
                                         key={category.value}
                                         type="button"
-                                        onClick={() => setValue("category", category.value as any)}
+                                        onClick={() => setValue("category", category.value as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
                                         className={`flex items-center gap-4 p-4 rounded-lg border-2 transition-all ${selectedCategory === category.value
                                             ? "border-blue-600 bg-blue-50"
                                             : "border-gray-200 hover:border-gray-300"

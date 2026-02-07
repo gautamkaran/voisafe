@@ -12,23 +12,29 @@ export default function AdminLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const [isVerified, setIsVerified] = useState(true);
+    const [isVerified] = useState(() => {
+        // Initialize from storage to avoid effect update
+        if (typeof window !== 'undefined') {
+            const org = getOrganization();
+            return !(org && org.isVerified === false);
+        }
+        return true;
+    });
     const [isLoading, setIsLoading] = useState(true);
+    // Move get calls inside effect to avoid dependency issues or hydration mismatches
     const user = getUser();
-    const organization = getOrganization();
 
     useEffect(() => {
-        // specific check: if organization data exists but isVerified is false
-        if (organization && organization.isVerified === false) {
-            setIsVerified(false);
-        }
-        setIsLoading(false);
+        setIsLoading(false); // eslint-disable-line react-hooks/set-state-in-effect
     }, []);
 
     if (isLoading) return null;
 
+    // specialized check for client-side only
     if (!isVerified) {
-        return <VerificationPending orgName={organization?.name} />;
+        // We need to re-fetch org safely or pass it from state if we stored it
+        const org = getOrganization();
+        return <VerificationPending orgName={org?.name} />;
     }
 
     // Org Admin Navigation

@@ -115,32 +115,32 @@ export const sendTyping = (trackingId: string, isTyping: boolean): void => {
  * Socket event listeners
  */
 export const socketEvents = {
-    onChatHistory: (callback: (data: any) => void) => {
+    onChatHistory: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("chat_history", callback);
     },
 
-    onMessageReceived: (callback: (data: any) => void) => {
+    onMessageReceived: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("message_received", callback);
     },
 
-    onUserTyping: (callback: (data: any) => void) => {
+    onUserTyping: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("user_typing", callback);
     },
 
-    onUserJoined: (callback: (data: any) => void) => {
+    onUserJoined: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("user_joined", callback);
     },
 
-    onUserLeft: (callback: (data: any) => void) => {
+    onUserLeft: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("user_left", callback);
     },
 
-    onError: (callback: (data: any) => void) => {
+    onError: (callback: (data: any) => void) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.on("error", callback);
     },
 
     // Remove listeners
-    off: (event: string, callback?: any) => {
+    off: (event: string, callback?: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
         socket?.off(event, callback);
     },
 };

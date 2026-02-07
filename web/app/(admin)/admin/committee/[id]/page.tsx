@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Save, Mail, User, Shield, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Mail, User, Shield, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { toast } from "sonner";
 
 export default function EditCommitteeMemberPage() {
     const router = useRouter();
-    const params = useParams();
+    // const params = useParams();
     const [isLoading, setIsLoading] = useState(false);
 
     // Mock Data Loading

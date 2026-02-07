@@ -7,10 +7,7 @@ import {
     FileText,
     AlertTriangle,
     CheckCircle,
-    Clock,
-    TrendingUp,
-    Building,
-    AlertCircle
+    Clock
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -25,7 +22,7 @@ export default function AdminDashboardPage() {
     const router = useRouter();
     const [complaints, setComplaints] = useState<Complaint[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     useEffect(() => {
         const currentUser = getUser();
@@ -144,8 +141,8 @@ export default function AdminDashboardPage() {
     );
 }
 
-function StatCard({ title, value, icon: Icon, color }: any) {
-    const colors: any = {
+function StatCard({ title, value, icon: Icon, color }: { title: string; value: string; icon: any; color: string }) { // eslint-disable-line @typescript-eslint/no-explicit-any
+    const colors: Record<string, string> = {
         blue: "bg-blue-50 text-blue-600",
         amber: "bg-amber-50 text-amber-600",
         red: "bg-red-50 text-red-600",

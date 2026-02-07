@@ -69,7 +69,7 @@ export const authAPI = {
     login: (email: string, password: string) =>
         api.post("/auth/login", { email, password }),
 
-    register: (data: any) =>
+    register: (data: any) => // eslint-disable-line @typescript-eslint/no-explicit-any
         api.post("/auth/register", data),
 
     getMe: () =>
@@ -81,7 +81,7 @@ export const authAPI = {
  */
 export const complaintAPI = {
     // Student endpoints
-    fileComplaint: (data: any) =>
+    fileComplaint: (data: any) => // eslint-disable-line @typescript-eslint/no-explicit-any
         api.post("/complaints", data),
 
     getMyComplaints: () =>
@@ -91,7 +91,7 @@ export const complaintAPI = {
         api.get(`/complaints/track/${trackingId}`),
 
     // Admin endpoints (if needed)
-    getAllComplaints: (params?: any) =>
+    getAllComplaints: (params?: any) => // eslint-disable-line @typescript-eslint/no-explicit-any
         api.get("/complaints", { params }),
 
     getComplaintById: (id: string) =>

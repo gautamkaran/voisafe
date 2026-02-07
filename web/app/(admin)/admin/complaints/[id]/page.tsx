@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
     ArrowLeft,
-    MoreHorizontal,
     ShieldAlert,
     MessageSquare,
     CheckCircle2,
@@ -36,8 +35,8 @@ export default function AdminComplaintDetailPage() {
             if (response.data.success) {
                 setComplaint(response.data.data.complaint);
             }
-        } catch (error) {
-            console.error("Failed to fetch complaint:", error);
+        } catch {
+            // console.error("Failed to fetch complaint:", error);
             toast.error("Failed to load complaint details");
         } finally {
             setIsLoading(false);
@@ -50,7 +49,7 @@ export default function AdminComplaintDetailPage() {
             await complaintAPI.updateStatus(complaint._id, newStatus, "Status updated via Admin Console");
             toast.success(`Status updated to ${newStatus}`);
             fetchComplaint(complaint._id); // Refresh
-        } catch (error) {
+        } catch {
             toast.error("Failed to update status");
         }
     };
@@ -116,7 +115,7 @@ export default function AdminComplaintDetailPage() {
                         </CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {complaint.statusHistory?.map((history: any, index: number) => (
+                                {complaint.statusHistory?.map((history: { status: string; changedAt: string }, index: number) => (
                                     <div key={index} className="flex gap-3">
                                         <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0" />
                                         <div>

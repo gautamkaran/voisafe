@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getUser, isAuthenticated } from "@/lib/auth";
-import { User } from "@/types";
 
 interface RoleGuardProps {
     children: React.ReactNode;
@@ -24,7 +23,7 @@ export default function RoleGuard({ children, allowedRoles }: RoleGuardProps) {
         // 2. Check Role
         const user = getUser();
         if (user && allowedRoles.includes(user.role)) {
-            setIsAuthorized(true);
+            setIsAuthorized(true); // eslint-disable-line react-hooks/set-state-in-effect
         } else {
             // Redirect to appropriate dashboard based on actual role
             if (user?.role === 'admin') router.push('/admin/dashboard');

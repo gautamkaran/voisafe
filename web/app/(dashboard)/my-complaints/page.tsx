@@ -9,7 +9,7 @@ import { complaintAPI } from "@/lib/api";
 import { isAdmin } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { formatDateTime, getStatusColor } from "@/lib/utils";
 
 export default function MyComplaintsPage() {

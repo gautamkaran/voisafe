@@ -57,8 +57,9 @@ export default function RegisterPage() {
                 // Redirect to dashboard
                 router.push("/dashboard");
             }
-        } catch (error: any) {
-            const message = error.response?.data?.message || "Registration failed. Please try again.";
+        } catch (error: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const message = (error as any).response?.data?.message || "Registration failed. Please try again.";
             toast.error(message);
         } finally {
             setIsLoading(false);

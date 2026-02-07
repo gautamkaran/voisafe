@@ -9,8 +9,7 @@ import {
     Clock,
     CheckCircle2,
     AlertCircle,
-    TrendingUp,
-    Users
+    TrendingUp
 } from "lucide-react";
 
 import { Complaint } from "@/types";
@@ -25,11 +24,11 @@ import { formatRelativeTime, getStatusColor } from "@/lib/utils";
 // ----------------------------------------------------------------------
 export default function DashboardPage() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
     const [complaints, setComplaints] = useState<Complaint[]>([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [organization, setOrganization] = useState<any>(null);
+    const [organization, setOrganization] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     useEffect(() => {
         const currentUser = getUser();
@@ -80,7 +79,7 @@ export default function DashboardPage() {
 
             <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, {user?.name}!</h1>
-                <p className="text-gray-600">Here's an overview of your complaints and recent activity.</p>
+                <p className="text-gray-600">Here&apos;s an overview of your complaints and recent activity.</p>
             </div>
 
             {/* Stats Grid */}
@@ -184,7 +183,7 @@ export default function DashboardPage() {
                     ) : complaints.length === 0 ? (
                         <div className="text-center py-12">
                             <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                            <p className="text-gray-600 mb-4">You haven't submitted any complaints yet.</p>
+                            <p className="text-gray-600 mb-4">You haven&apos;t submitted any complaints yet.</p>
                             <Button onClick={() => router.push("/submit-complaint")}>Submit Your First Complaint</Button>
                         </div>
                     ) : (

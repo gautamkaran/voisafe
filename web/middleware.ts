@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+// import type { NextRequest } from "next/server";
 
 /**
  * MIDDLEWARE FOR ROUTE PROTECTION
@@ -9,8 +9,8 @@ import type { NextRequest } from "next/server";
  * Auth protection is handled by client-side redirects in pages.
  */
 
-export function middleware(request: NextRequest) {
-    const { pathname } = request.nextUrl;
+export function middleware() {
+    // const { pathname } = request.nextUrl;
 
     // Allow all routes - auth is handled client-side
     // This is because tokens are in localStorage, not cookies

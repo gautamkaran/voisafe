@@ -112,7 +112,7 @@ export interface RegisterFormData {
     year: number;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = any> { // eslint-disable-line @typescript-eslint/no-explicit-any
     success: boolean;
     message?: string;
     data?: T;

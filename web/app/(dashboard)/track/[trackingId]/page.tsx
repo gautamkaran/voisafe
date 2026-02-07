@@ -26,23 +26,25 @@ export default function TrackComplaintPage() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetchComplaint();
-    }, [trackingId]);
+        const fetchComplaint = async () => {
+            try {
+                const response = await complaintAPI.trackComplaint(trackingId);
 
-    const fetchComplaint = async () => {
-        try {
-            const response = await complaintAPI.trackComplaint(trackingId);
-
-            if (response.data.success) {
-                setComplaint(response.data.data.complaint);
+                if (response.data.success) {
+                    setComplaint(response.data.data.complaint);
+                }
+            } catch (error: any) { // eslint-disable-line @typescript-eslint/no-explicit-any
+                const message = error.response?.data?.message || "Failed to fetch complaint";
+                toast.error(message);
+            } finally {
+                setIsLoading(false);
             }
-        } catch (error: any) {
-            const message = error.response?.data?.message || "Failed to fetch complaint";
-            toast.error(message);
-        } finally {
-            setIsLoading(false);
+        };
+
+        if (trackingId) {
+            fetchComplaint();
         }
-    };
+    }, [trackingId]);
 
     if (isLoading) {
         return (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckSquare, AlertCircle, Clock, CheckCircle2, MoreHorizontal } from "lucide-react";
+import { CheckSquare, Clock, CheckCircle2 } from "lucide-react";
 import { complaintAPI } from "@/lib/api";
 import { Complaint } from "@/types";
 import { formatRelativeTime, getStatusColor } from "@/lib/utils";

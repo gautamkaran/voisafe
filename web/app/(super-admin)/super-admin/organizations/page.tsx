@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Building2, CheckCircle, XCircle, MoreVertical, Search, Filter } from "lucide-react";
+import { Building2, MoreVertical, Search, Filter } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { toast } from "sonner";
 
 export default function SuperAdminOrganizationsPage() {

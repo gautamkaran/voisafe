@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
     LayoutDashboard,
     FileText,
-    MessageSquare,
     List,
     LogOut,
     Menu,
@@ -25,12 +24,16 @@ export default function DashboardLayout({
 }) {
     const router = useRouter();
     const pathname = usePathname();
-    const [user, setUser] = useState<User | null>(null);
+    const [user] = useState<User | null>(() => {
+        if (typeof window !== 'undefined') return getUser();
+        return null;
+    });
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
-        const currentUser = getUser();
-        setUser(currentUser);
+        // Hydration mismatch avoidance is handled by lazy init, but updates need effect if getUser changes?
+        // Actually getUser is synchronous from localStorage.
+        // We can keep effect for route changes if needed, but lazy init handles mount.
     }, [router]);
 
     const navigation = [

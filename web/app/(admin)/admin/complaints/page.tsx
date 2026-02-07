@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Filter, Search, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Filter, ArrowUpDown } from "lucide-react";
 import { complaintAPI } from "@/lib/api";
 import { Complaint } from "@/types";
 import { Button } from "@/components/ui/Button";
@@ -117,7 +117,7 @@ export default function AdminComplaintsPage() {
     );
 }
 
-function ClockIcon(props: any) {
+function ClockIcon(props: React.SVGProps<SVGSVGElement>) {
     return (
         <svg
             {...props}

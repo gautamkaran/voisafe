@@ -34,7 +34,7 @@ export default function ChatPage() {
     useEffect(() => {
         // Initialize socket connection
         try {
-            const socket = initializeSocket();
+            initializeSocket();
             setIsConnected(true);
 
             // Join chat room
@@ -62,8 +62,8 @@ export default function ChatPage() {
             return () => {
                 disconnectSocket();
             };
-        } catch (error: any) {
-            toast.error(error.message || "Failed to connect to chat");
+        } catch (error: unknown) {
+            toast.error((error as Error).message || "Failed to connect to chat");
         }
     }, [trackingId]);
 
@@ -79,8 +79,8 @@ export default function ChatPage() {
         try {
             sendMessage(trackingId, newMessage.trim());
             setNewMessage("");
-        } catch (error: any) {
-            toast.error(error.message || "Failed to send message");
+        } catch (error: unknown) {
+            toast.error((error as Error).message || "Failed to send message");
         } finally {
             setIsSending(false);
         }

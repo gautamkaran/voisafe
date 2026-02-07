@@ -1,24 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Users, UserPlus, Mail, Shield } from "lucide-react";
+import { UserPlus, Mail, Shield } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { toast } from "sonner";
 
 export default function AdminCommitteePage() {
     const router = useRouter();
     // Placeholder state - normally fetched from API
-    const [members, setMembers] = useState([
+    const [members] = useState([
         { id: 1, name: "Dr. Anjali Sharma", role: "Chairperson", email: "anjali.s@college.edu", status: "Active" },
         { id: 2, name: "Prof. Rajesh Kumar", role: "Member", email: "rajesh.k@college.edu", status: "Active" },
         { id: 3, name: "Mrs. Sunita Verma", role: "Counselor", email: "sunita.v@college.edu", status: "On Leave" },
     ]);
 
-    const handleAddMember = () => {
-        toast.info("Member invitation system coming soon!");
-    };
+
 
     return (
         <div className="space-y-6">

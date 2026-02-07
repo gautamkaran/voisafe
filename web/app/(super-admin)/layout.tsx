@@ -1,7 +1,7 @@
 "use client";
 
 import RoleGuard from "@/components/auth/RoleGuard";
-import { LayoutDashboard, Building2, Users, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Building2, Settings, LogOut } from "lucide-react";
 import { logout } from "@/lib/auth";
 
 export default function SuperAdminLayout({

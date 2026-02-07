@@ -49,7 +49,7 @@ export default function CommitteeComplaintDetailPage() {
             await complaintAPI.updateStatus(complaint._id, newStatus, "Status updated by Committee Member");
             toast.success(`Status updated to ${newStatus}`);
             fetchComplaint(complaint._id); // Refresh
-        } catch (error) {
+        } catch {
             toast.error("Failed to update status");
         }
     };
@@ -104,7 +104,7 @@ export default function CommitteeComplaintDetailPage() {
                         <CardHeader><CardTitle className="text-base">History</CardTitle></CardHeader>
                         <CardContent>
                             <div className="space-y-4">
-                                {complaint.statusHistory?.map((history: any, index: number) => (
+                                {complaint.statusHistory?.map((history: { status: string; changedAt: string }, index: number) => (
                                     <div key={index} className="flex gap-3">
                                         <div className="w-2 h-2 rounded-full bg-slate-200 mt-2 ring-4 ring-white" />
                                         <div>

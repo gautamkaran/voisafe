@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Save, Building, Bell, Lock, Globe } from "lucide-react";
+import { Save, Building, Lock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { getOrganization } from "@/lib/auth";

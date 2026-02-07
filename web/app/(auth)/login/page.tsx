@@ -48,8 +48,9 @@ export default function LoginPage() {
                 // Redirect to dashboard
                 router.push("/dashboard");
             }
-        } catch (error: any) {
-            const message = error.response?.data?.message || "Login failed. Please try again.";
+        } catch (error: unknown) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const message = (error as any).response?.data?.message || "Login failed. Please try again.";
             toast.error(message);
         } finally {
             setIsLoading(false);
@@ -99,7 +100,7 @@ export default function LoginPage() {
                         </Button>
 
                         <p className="text-center text-sm text-gray-600">
-                            Don't have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link href="/register" className="text-blue-600 hover:underline font-medium">
                                 Register here
                             </Link>

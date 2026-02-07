@@ -28,7 +28,7 @@ export default function VerificationPending({ orgName }: VerificationPendingProp
                         <ul className="list-disc list-inside space-y-1">
                             <li>You cannot access the admin dashboard yet.</li>
                             <li>Students cannot submit complaints.</li>
-                            <li>Our team is reviewing your institution's details.</li>
+                            <li>Our team is reviewing your institution&apos;s details.</li>
                         </ul>
                     </div>
 

@@ -9,7 +9,7 @@ import { User } from "@/types";
 /**
  * Save auth data to localStorage
  */
-export function saveAuth(token: string, user: User, organization?: any): void {
+export function saveAuth(token: string, user: User, organization?: any): void { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (typeof window === "undefined") return;
 
     localStorage.setItem("token", token);
@@ -25,7 +25,7 @@ export function saveAuth(token: string, user: User, organization?: any): void {
 /**
  * Get current organization from localStorage
  */
-export function getOrganization(): any | null {
+export function getOrganization(): any | null { // eslint-disable-line @typescript-eslint/no-explicit-any
     if (typeof window === "undefined") return null;
 
     const orgStr = localStorage.getItem("organization");
