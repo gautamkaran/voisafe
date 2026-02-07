@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
-import { UserPlus } from "lucide-react";
+import { UserPlus, AlertCircle } from "lucide-react";
 
 import { registerSchema, type RegisterFormData } from "@/schemas/complaint";
 import { authAPI } from "@/lib/api";
@@ -14,10 +14,13 @@ import { saveAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Alert } from "@/components/ui/Alert";
+import { FormField } from "@/components/ui/FormField";
 
 export default function RegisterPage() {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
+    const [agreeToTerms, setAgreeToTerms] = useState(false);
 
     const {
         register,
@@ -26,18 +29,23 @@ export default function RegisterPage() {
     } = useForm<RegisterFormData>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
-            name: "John Doe",
-            email: "john.doe@college.edu",
-            password: "password123",
-            confirmPassword: "password123",
-            college: "ABC University",
-            studentId: "STU123456",
-            department: "Computer Science",
-            year: 2,
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            college: "",
+            studentId: "",
+            department: "",
+            year: 1,
         },
     });
 
     const onSubmit = async (data: RegisterFormData) => {
+        if (!agreeToTerms) {
+            toast.error("Please agree to the terms and conditions");
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -52,7 +60,7 @@ export default function RegisterPage() {
                 // Save auth data
                 saveAuth(token, user);
 
-                toast.success("Registration successful!");
+                toast.success("Welcome to VoiSafe! Registration successful!");
 
                 // Redirect to dashboard
                 router.push("/dashboard");
@@ -67,111 +75,197 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
-            <Card className="w-full max-w-2xl">
-                <CardHeader className="space-y-1 text-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4 py-12">
+            <Card className="w-full max-w-2xl shadow-lg">
+                <CardHeader className="space-y-1 text-center pb-2">
                     <div className="flex justify-center mb-4">
-                        <div className="p-3 bg-blue-100 rounded-full">
+                        <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg">
                             <UserPlus className="w-8 h-8 text-blue-600" />
                         </div>
                     </div>
                     <CardTitle className="text-2xl font-bold">Create Your Account</CardTitle>
                     <CardDescription>
-                        Register to submit anonymous complaints and track their status
+                        Join VoiSafe and start reporting safely and anonymously
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {/* Info Box */}
+                    <Alert variant="info" className="mb-6">
+                        <strong>Your privacy is important:</strong> Your identity will never be shared with your complaints
+                    </Alert>
+
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input
+                            <FormField
                                 label="Full Name"
-                                placeholder="John Doe"
                                 error={errors.name?.message}
-                                {...register("name")}
                                 required
-                            />
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="John Doe"
+                                    {...register("name")}
+                                    className={errors.name ? "border-red-500" : ""}
+                                />
+                            </FormField>
 
-                            <Input
-                                label="Email"
-                                type="email"
-                                placeholder="your.email@college.edu"
+                            <FormField
+                                label="Email Address"
                                 error={errors.email?.message}
-                                {...register("email")}
                                 required
-                            />
+                            >
+                                <Input
+                                    type="email"
+                                    placeholder="your.email@college.edu"
+                                    {...register("email")}
+                                    className={errors.email ? "border-red-500" : ""}
+                                />
+                            </FormField>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input
+                            <FormField
                                 label="Password"
-                                type="password"
-                                placeholder="••••••••"
                                 error={errors.password?.message}
-                                {...register("password")}
+                                hint="At least 8 characters"
                                 required
-                            />
+                            >
+                                <Input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    {...register("password")}
+                                    className={errors.password ? "border-red-500" : ""}
+                                />
+                            </FormField>
 
-                            <Input
+                            <FormField
                                 label="Confirm Password"
-                                type="password"
-                                placeholder="••••••••"
                                 error={errors.confirmPassword?.message}
-                                {...register("confirmPassword")}
                                 required
-                            />
+                            >
+                                <Input
+                                    type="password"
+                                    placeholder="••••••••"
+                                    {...register("confirmPassword")}
+                                    className={errors.confirmPassword ? "border-red-500" : ""}
+                                />
+                            </FormField>
                         </div>
 
-                        <Input
+                        <FormField
                             label="College/Institution"
-                            placeholder="ABC University"
                             error={errors.college?.message}
-                            {...register("college")}
                             required
-                        />
+                        >
+                            <Input
+                                type="text"
+                                placeholder="ABC University"
+                                {...register("college")}
+                                className={errors.college ? "border-red-500" : ""}
+                            />
+                        </FormField>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <Input
+                            <FormField
                                 label="Student ID"
-                                placeholder="STU123456"
                                 error={errors.studentId?.message}
-                                {...register("studentId")}
                                 required
-                            />
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="STU123456"
+                                    {...register("studentId")}
+                                    className={errors.studentId ? "border-red-500" : ""}
+                                />
+                            </FormField>
 
-                            <Input
+                            <FormField
                                 label="Department"
-                                placeholder="Computer Science"
                                 error={errors.department?.message}
-                                {...register("department")}
                                 required
-                            />
+                            >
+                                <Input
+                                    type="text"
+                                    placeholder="Computer Science"
+                                    {...register("department")}
+                                    className={errors.department ? "border-red-500" : ""}
+                                />
+                            </FormField>
                         </div>
 
-                        <Input
+                        <FormField
                             label="Year of Study"
-                            type="number"
-                            placeholder="1"
-                            min={1}
-                            max={5}
                             error={errors.year?.message}
-                            {...register("year", { valueAsNumber: true })}
                             required
-                        />
+                        >
+                            <select
+                                {...register("year", { valueAsNumber: true })}
+                                className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            >
+                                <option value={1}>1st Year</option>
+                                <option value={2}>2nd Year</option>
+                                <option value={3}>3rd Year</option>
+                                <option value={4}>4th Year</option>
+                                <option value={5}>5th Year</option>
+                            </select>
+                        </FormField>
+
+                        {/* Terms and Conditions */}
+                        <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                            <input
+                                type="checkbox"
+                                id="terms"
+                                checked={agreeToTerms}
+                                onChange={(e) => setAgreeToTerms(e.target.checked)}
+                                className="w-4 h-4 mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
+                            />
+                            <label htmlFor="terms" className="text-sm text-gray-600 cursor-pointer">
+                                I agree to VoiSafe&apos;s{" "}
+                                <Link href="#" className="text-blue-600 hover:underline font-medium">
+                                    Terms of Service
+                                </Link>
+                                {" "}and{" "}
+                                <Link href="#" className="text-blue-600 hover:underline font-medium">
+                                    Privacy Policy
+                                </Link>
+                            </label>
+                        </div>
 
                         <Button
                             type="submit"
                             className="w-full"
-                            isLoading={isLoading}
+                            disabled={isLoading}
                         >
-                            {isLoading ? "Creating account..." : "Create Account"}
+                            {isLoading ? (
+                                <>
+                                    <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Creating Account...
+                                </>
+                            ) : (
+                                "Create Account"
+                            )}
                         </Button>
 
-                        <p className="text-center text-sm text-gray-600">
-                            Already have an account?{" "}
-                            <Link href="/login" className="text-blue-600 hover:underline font-medium">
-                                Login here
-                            </Link>
-                        </p>
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white text-gray-500">
+                                    Already registered?
+                                </span>
+                            </div>
+                        </div>
+
+                        <Link href="/login" className="block">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full"
+                            >
+                                Sign In to Your Account
+                            </Button>
+                        </Link>
                     </form>
                 </CardContent>
             </Card>

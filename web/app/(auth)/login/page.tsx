@@ -14,6 +14,8 @@ import { saveAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Alert } from "@/components/ui/Alert";
+import { FormField } from "@/components/ui/FormField";
 
 export default function LoginPage() {
     const router = useRouter();
@@ -58,54 +60,92 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader className="space-y-1 text-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50 p-4">
+            <Card className="w-full max-w-md shadow-lg">
+                <CardHeader className="space-y-1 text-center pb-2">
                     <div className="flex justify-center mb-4">
-                        <div className="p-3 bg-blue-100 rounded-full">
+                        <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg">
                             <LogIn className="w-8 h-8 text-blue-600" />
                         </div>
                     </div>
-                    <CardTitle className="text-2xl font-bold">Welcome to VoiSafe</CardTitle>
+                    <CardTitle className="text-2xl font-bold">Welcome Back</CardTitle>
                     <CardDescription>
-                        Login to access your anonymous grievance dashboard
+                        Sign in to your VoiSafe account
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                        <Input
-                            label="Email"
-                            type="email"
-                            placeholder="your.email@college.edu"
-                            error={errors.email?.message}
-                            {...register("email")}
-                            required
-                        />
+                <CardContent className="space-y-4">
+                    {/* Info Alert */}
+                    <Alert variant="info" onClose={undefined}>
+                        <strong>Demo Credentials:</strong> Use email john.doe@college.edu with password password123
+                    </Alert>
 
-                        <Input
-                            label="Password"
-                            type="password"
-                            placeholder="••••••••"
-                            error={errors.password?.message}
-                            {...register("password")}
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField
+                            label="Email Address"
+                            error={errors.email?.message}
                             required
-                        />
+                        >
+                            <Input
+                                type="email"
+                                placeholder="your.email@college.edu"
+                                {...register("email")}
+                                className={errors.email ? "border-red-500" : ""}
+                            />
+                        </FormField>
+
+                        <FormField
+                            label="Password"
+                            error={errors.password?.message}
+                            required
+                        >
+                            <Input
+                                type="password"
+                                placeholder="••••••••"
+                                {...register("password")}
+                                className={errors.password ? "border-red-500" : ""}
+                            />
+                        </FormField>
 
                         <Button
                             type="submit"
                             className="w-full"
-                            isLoading={isLoading}
+                            disabled={isLoading}
                         >
-                            {isLoading ? "Logging in..." : "Login"}
+                            {isLoading ? (
+                                <>
+                                    <span className="inline-block w-4 h-4 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    Signing in...
+                                </>
+                            ) : (
+                                "Sign In"
+                            )}
                         </Button>
 
-                        <p className="text-center text-sm text-gray-600">
-                            Don&apos;t have an account?{" "}
-                            <Link href="/register" className="text-blue-600 hover:underline font-medium">
-                                Register here
-                            </Link>
-                        </p>
+                        <div className="relative">
+                            <div className="absolute inset-0 flex items-center">
+                                <div className="w-full border-t border-gray-300" />
+                            </div>
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 bg-white text-gray-500">
+                                    New to VoiSafe?
+                                </span>
+                            </div>
+                        </div>
+
+                        <Link href="/register" className="block">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                className="w-full"
+                            >
+                                Create Account
+                            </Button>
+                        </Link>
                     </form>
+
+                    <p className="text-center text-xs text-gray-500">
+                        By signing in, you agree to our Terms of Service and Privacy Policy
+                    </p>
                 </CardContent>
             </Card>
         </div>

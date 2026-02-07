@@ -9,7 +9,8 @@ import {
     Clock,
     CheckCircle2,
     AlertCircle,
-    TrendingUp
+    TrendingUp,
+    Plus,
 } from "lucide-react";
 
 import { Complaint } from "@/types";
@@ -17,23 +18,23 @@ import { complaintAPI } from "@/lib/api";
 import { getUser, getOrganization } from "@/lib/auth";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { formatRelativeTime, getStatusColor } from "@/lib/utils";
+import { Alert } from "@/components/ui/Alert";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { ComplaintsList } from "@/components/ComplaintsList";
+import { DashboardSkeleton } from "@/components/LoadingStates";
+import { formatRelativeTime } from "@/lib/utils";
 
-// ----------------------------------------------------------------------
-// STUDENT DASHBOARD COMPONENT
-// ----------------------------------------------------------------------
 export default function DashboardPage() {
     const router = useRouter();
     const [user, setUser] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
     const [complaints, setComplaints] = useState<Complaint[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-
     const [organization, setOrganization] = useState<any>(null); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     useEffect(() => {
         const currentUser = getUser();
         if (!currentUser) {
-            router.push("/login"); // RoleGuard doubles this check but safe to keep
+            router.push("/login");
             return;
         }
         setUser(currentUser);
@@ -61,81 +62,88 @@ export default function DashboardPage() {
         inProgress: complaints.filter((c) => ["in-progress", "under-review"].includes(c.status)).length,
     };
 
+    if (isLoading) {
+        return <DashboardSkeleton />;
+    }
+
     if (!user) return null;
+
+    const isOrgRestricted = organization?.isVerified === false;
 
     return (
         <div className="space-y-8">
-            {organization && organization.isVerified === false && (
-                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 flex items-start gap-3">
-                    <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
+            {/* Verification Alert */}
+            {isOrgRestricted && (
+                <Alert variant="warning">
+                    <AlertCircle className="w-5 h-5" />
                     <div>
-                        <h3 className="text-sm font-semibold text-amber-900">System Activation Pending</h3>
-                        <p className="text-sm text-amber-700 mt-1">
-                            Your institution ({organization.name}) is currently pending verification. You cannot submit new complaints until the approval process is complete.
+                        <strong>Institution Verification Pending</strong>
+                        <p className="text-sm mt-1">
+                            Your institution ({organization.name}) is under verification. You'll be able to submit complaints once approval is complete.
                         </p>
                     </div>
-                </div>
+                </Alert>
             )}
 
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, {user?.name}!</h1>
-                <p className="text-gray-600">Here&apos;s an overview of your complaints and recent activity.</p>
+            {/* Header */}
+            <div className="space-y-2">
+                <h1 className="text-3xl font-bold text-gray-900">
+                    Welcome back, <span className="text-blue-600">{user?.name?.split(" ")[0]}</span>!
+                </h1>
+                <p className="text-gray-600">
+                    Track your anonymous complaints and monitor their progress in real-time.
+                </p>
             </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card>
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Total Complaints</p>
-                                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.total}</p>
-                            </div>
-                            <div className="p-3 bg-blue-100 rounded-lg">
-                                <FileText className="w-6 h-6 text-blue-600" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Pending</p>
-                                <p className="text-3xl font-bold text-yellow-600 mt-2">{stats.pending}</p>
-                            </div>
-                            <div className="p-3 bg-yellow-100 rounded-lg">
-                                <Clock className="w-6 h-6 text-yellow-600" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">In Progress</p>
-                                <p className="text-3xl font-bold text-purple-600 mt-2">{stats.inProgress}</p>
-                            </div>
-                            <div className="p-3 bg-purple-100 rounded-lg">
-                                <TrendingUp className="w-6 h-6 text-purple-600" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardContent className="pt-6">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-gray-600">Resolved</p>
-                                <p className="text-3xl font-bold text-green-600 mt-2">{stats.resolved}</p>
-                            </div>
-                            <div className="p-3 bg-green-100 rounded-lg">
-                                <CheckCircle2 className="w-6 h-6 text-green-600" />
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                {[
+                    {
+                        label: "Total Complaints",
+                        value: stats.total,
+                        icon: FileText,
+                        color: "bg-blue-100 text-blue-600",
+                    },
+                    {
+                        label: "Pending",
+                        value: stats.pending,
+                        icon: Clock,
+                        color: "bg-yellow-100 text-yellow-600",
+                    },
+                    {
+                        label: "In Progress",
+                        value: stats.inProgress,
+                        icon: TrendingUp,
+                        color: "bg-purple-100 text-purple-600",
+                    },
+                    {
+                        label: "Resolved",
+                        value: stats.resolved,
+                        icon: CheckCircle2,
+                        color: "bg-green-100 text-green-600",
+                    },
+                ].map((stat) => {
+                    const Icon = stat.icon;
+                    return (
+                        <Card key={stat.label} className="hover:shadow-md transition-shadow">
+                            <CardContent className="pt-6">
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-600">
+                                            {stat.label}
+                                        </p>
+                                        <p className="text-4xl font-bold text-gray-900 mt-2">
+                                            {stat.value}
+                                        </p>
+                                    </div>
+                                    <div className={`p-3 rounded-lg ${stat.color}`}>
+                                        <Icon className="w-6 h-6" />
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    );
+                })}
             </div>
 
             {/* Quick Actions */}
@@ -148,19 +156,23 @@ export default function DashboardPage() {
                         <Button
                             onClick={() => router.push("/submit-complaint")}
                             className="h-auto py-4 justify-start"
-                            disabled={organization?.isVerified === false}
+                            disabled={isOrgRestricted}
                         >
-                            <FileText className="w-5 h-5 mr-3" />
-                            <div className="text-left">
+                            <Plus className="w-5 h-5 mr-3" />
+                            <div className="text-left flex-1">
                                 <p className="font-semibold">Submit New Complaint</p>
-                                <p className="text-sm opacity-90">File a new anonymous grievance</p>
+                                <p className="text-xs opacity-75">File a new anonymous grievance</p>
                             </div>
                         </Button>
-                        <Button variant="outline" onClick={() => router.push("/my-complaints")} className="h-auto py-4 justify-start">
-                            <MessageSquare className="w-5 h-5 mr-3" />
-                            <div className="text-left">
-                                <p className="font-semibold">View My Complaints</p>
-                                <p className="text-sm opacity-75">Track and manage your complaints</p>
+                        <Button
+                            variant="outline"
+                            onClick={() => router.push("/my-complaints")}
+                            className="h-auto py-4 justify-start"
+                        >
+                            <FileText className="w-5 h-5 mr-3" />
+                            <div className="text-left flex-1">
+                                <p className="font-semibold">View All Complaints</p>
+                                <p className="text-xs opacity-75">Track and manage your complaints</p>
                             </div>
                         </Button>
                     </div>
@@ -171,45 +183,43 @@ export default function DashboardPage() {
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
-                        <CardTitle>Recent Complaints</CardTitle>
-                        <Link href="/my-complaints" className="text-sm text-blue-600 hover:underline">View all</Link>
+                        <div>
+                            <CardTitle>Recent Complaints</CardTitle>
+                            <p className="text-sm text-gray-500 mt-1">
+                                Your 5 most recent submissions
+                            </p>
+                        </div>
+                        {complaints.length > 0 && (
+                            <Link
+                                href="/my-complaints"
+                                className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                            >
+                                View all →
+                            </Link>
+                        )}
                     </div>
                 </CardHeader>
                 <CardContent>
-                    {isLoading ? (
-                        <div className="flex justify-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                        </div>
-                    ) : complaints.length === 0 ? (
-                        <div className="text-center py-12">
-                            <AlertCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
-                            <p className="text-gray-600 mb-4">You haven&apos;t submitted any complaints yet.</p>
-                            <Button onClick={() => router.push("/submit-complaint")}>Submit Your First Complaint</Button>
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {complaints.slice(0, 5).map((complaint) => (
-                                <div
-                                    key={complaint._id}
-                                    className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-blue-300 transition-colors cursor-pointer"
-                                    onClick={() => router.push(`/track/${complaint.trackingId}`)}
-                                >
-                                    <div className="flex-1 min-w-0">
-                                        <h4 className="font-medium text-gray-900 truncate">{complaint.title}</h4>
-                                        <div className="flex items-center gap-3 mt-1">
-                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusColor(complaint.status)}`}>
-                                                {complaint.status.replace("-", " ")}
-                                            </span>
-                                            <span className="text-sm text-gray-500">{formatRelativeTime(complaint.createdAt)}</span>
-                                        </div>
-                                    </div>
-                                    <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); router.push(`/chat/${complaint.trackingId}`); }}>
-                                        <MessageSquare className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    <ComplaintsList
+                        complaints={complaints.slice(0, 5)}
+                        onViewClick={(complaint) =>
+                            router.push(`/track/${complaint.trackingId}`)
+                        }
+                        onMessageClick={(complaint) =>
+                            router.push(`/chat/${complaint.trackingId}`)
+                        }
+                        emptyState={
+                            <EmptyState
+                                icon={FileText}
+                                title="No Complaints Yet"
+                                description="You haven't submitted any complaints. Start by filing your first anonymous grievance."
+                                action={{
+                                    label: "Submit Complaint",
+                                    onClick: () => router.push("/submit-complaint"),
+                                }}
+                            />
+                        }
+                    />
                 </CardContent>
             </Card>
         </div>
