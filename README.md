@@ -433,7 +433,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.1 â€” Landing Page (Home Screen)**
 
-![VoiSafe Home Page](.github/diagrams/screenshot_home.png)
+![VoiSafe Home Page](.github/screenshots/home_page.png)
 
 > The VoiSafe landing page showcasing the platform's core value proposition: *"Speak Up Safely & Securely"*. Features include Submit Complaint and Track Status buttons, and clear feature highlights (100% Anonymous, Real-time Communication, Enterprise Security).
 
@@ -441,7 +441,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.2 â€” Login Screen**
 
-![VoiSafe Login Page](.github/diagrams/screenshot_login.png)
+![VoiSafe Login Page](.github/screenshots/login_page.png)
 
 > Secure login page for all user roles (Student, Committee, Principal, Super Admin). Users authenticate with their college email and password. JWT token is generated on successful login.
 
@@ -449,7 +449,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.3 â€” Student Registration Screen**
 
-![VoiSafe Register Page](.github/diagrams/screenshot_register.png)
+![VoiSafe Register Page](.github/screenshots/register_page.png)
 
 > Registration screen capturing College/Institution name, Student ID, Department, and Year of Study. The `College/Institution` field is the multi-tenant key that links the student to their specific `Organization` record in the database.
 
@@ -559,4 +559,5 @@ The architecture leaves extensive room enabling subsequent scaling patches effic
 4. **Socket.IO Documentation**: [socket.io/docs](https://socket.io/docs)
 5. **W3Schools Documentation Matrix**: [w3schools.com](https://www.w3schools.com)
 6. **Diagram Mapping Framework**: [app.diagrams.net](https://app.diagrams.net/)
+
 
