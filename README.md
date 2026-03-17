@@ -124,35 +124,35 @@ Modeled holistically across 4 entity models:
 
 ### 4.1 ER Diagram
 Displays the completely isolated entities executing to ensure absolute anonymity. Notice there is no direct relationship between the `Users` and `Complaints` tables.
-![Er Diagram](.github/diagrams/er_diagram.svg)
+![Er Diagram](.github/docs-assets/diagrams/er_diagram.svg)
 
 ### 4.2 Data Flow Diagram
 Tracks the lifecycle processes of user routing, complaint sanitization, database fetching, and subsequent socket linkages.
-![Data Flow Diagram](.github/diagrams/data_flow_diagram.svg)
+![Data Flow Diagram](.github/docs-assets/diagrams/data_flow_diagram.svg)
 
 ### 4.3 Structural diagrams
 
 **4.3.1 Use case diagram**
-![Use Case Diagram](.github/diagrams/use_case_diagram.svg)
+![Use Case Diagram](.github/docs-assets/diagrams/use_case_diagram.svg)
 
 **4.3.2 Class diagram**
-![Class Diagram](.github/diagrams/class_diagram.svg)
+![Class Diagram](.github/docs-assets/diagrams/class_diagram.svg)
 
 **4.3.3 Component diagram**
-![Component Diagram](.github/diagrams/component_diagram.svg)
+![Component Diagram](.github/docs-assets/diagrams/component_diagram.svg)
 
 **4.3.4 Deployment diagram**
-![Deployment Diagram](.github/diagrams/deployment_diagram.svg)
+![Deployment Diagram](.github/docs-assets/diagrams/deployment_diagram.svg)
 
 **4.3.5 Activity diagram**
-![Activity Diagram](.github/diagrams/activity_diagram.svg)
+![Activity Diagram](.github/docs-assets/diagrams/activity_diagram.svg)
 
 **4.3.6 Sequence diagram**
-![Sequence Diagram](.github/diagrams/sequence_diagram.svg)
+![Sequence Diagram](.github/docs-assets/diagrams/sequence_diagram.svg)
 
 ### 4.4 Architectural Design
 Illustrates the central deployment of the full system stack as a Cloud platform.
-![Architectural Design](.github/diagrams/architectural_design.svg)
+![Architectural Design](.github/docs-assets/diagrams/architectural_design.svg)
 
 ### 4.5 Algorithm: Code Execution in Voisafe
 
@@ -433,7 +433,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.1 â€” Landing Page (Home Screen)**
 
-![VoiSafe Home Page](.github/screenshots/home_page.png)
+![VoiSafe Home Page](.github/docs-assets/screenshots/home_page.png)
 
 > The VoiSafe landing page showcasing the platform's core value proposition: *"Speak Up Safely & Securely"*. Features include Submit Complaint and Track Status buttons, and clear feature highlights (100% Anonymous, Real-time Communication, Enterprise Security).
 
@@ -441,7 +441,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.2 â€” Login Screen**
 
-![VoiSafe Login Page](.github/screenshots/login_page.png)
+![VoiSafe Login Page](.github/docs-assets/screenshots/login_page.png)
 
 > Secure login page for all user roles (Student, Committee, Principal, Super Admin). Users authenticate with their college email and password. JWT token is generated on successful login.
 
@@ -449,7 +449,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.3 â€” Student Registration Screen**
 
-![VoiSafe Register Page](.github/screenshots/register_page.png)
+![VoiSafe Register Page](.github/docs-assets/screenshots/register_page.png)
 
 > Registration screen capturing College/Institution name, Student ID, Department, and Year of Study. The `College/Institution` field is the multi-tenant key that links the student to their specific `Organization` record in the database.
 
@@ -559,5 +559,6 @@ The architecture leaves extensive room enabling subsequent scaling patches effic
 4. **Socket.IO Documentation**: [socket.io/docs](https://socket.io/docs)
 5. **W3Schools Documentation Matrix**: [w3schools.com](https://www.w3schools.com)
 6. **Diagram Mapping Framework**: [app.diagrams.net](https://app.diagrams.net/)
+
 
 
