@@ -433,7 +433,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.1 — Landing Page (Home Screen)**
 
-![VoiSafe Home Page](diagrams/screenshot_home.png)
+![VoiSafe Home Page](diagrams/screenshots/screenshot_home.png)
 
 > The VoiSafe landing page showcasing the platform's core value proposition: *"Speak Up Safely & Securely"*. Features include Submit Complaint and Track Status buttons, and clear feature highlights (100% Anonymous, Real-time Communication, Enterprise Security).
 
@@ -441,7 +441,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.2 — Login Screen**
 
-![VoiSafe Login Page](diagrams/screenshot_login.png)
+![VoiSafe Login Page](diagrams/screenshots/screenshot_login.png)
 
 > Secure login page for all user roles (Student, Committee, Principal, Super Admin). Users authenticate with their college email and password. JWT token is generated on successful login.
 
@@ -449,7 +449,7 @@ The database runs on **MongoDB Atlas** with three primary collections:
 
 **Figure 6.1.3 — Student Registration Screen**
 
-![VoiSafe Register Page](diagrams/screenshot_register.png)
+![VoiSafe Register Page](diagrams/screenshots/screenshot_register.png)
 
 > Registration screen capturing College/Institution name, Student ID, Department, and Year of Study. The `College/Institution` field is the multi-tenant key that links the student to their specific `Organization` record in the database.
 

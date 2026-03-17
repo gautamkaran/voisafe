@@ -1,0 +1,38 @@
+flowchart LR
+    SuperAdmin(["👑 Super Admin"])
+    Principal(["🏫 Principal / Admin"])
+    CommitteeAdmin(["👥 Committee Admin"])
+    Student(["🎓 Student"])
+
+    subgraph VoiSafe System
+        UC1([Register Institution])
+        UC2([Approve / Reject Institution])
+        UC3([Create Committee Members])
+        UC4([Register as Student])
+        UC5([Submit Anonymous Complaint])
+        UC6([Track Complaint by Tracking ID])
+        UC7([View Complaint Dashboard])
+        UC8([Update Complaint Status])
+        UC9([Initiate Live Anonymous Chat])
+        UC10([Reveal Student Identity - Restricted])
+        UC11([Manage All Institutions])
+    end
+
+    SuperAdmin --> UC2
+    SuperAdmin --> UC11
+
+    Principal --> UC1
+    Principal --> UC3
+
+    Student --> UC4
+    Student --> UC5
+    Student --> UC6
+    Student --> UC9
+
+    CommitteeAdmin --> UC7
+    CommitteeAdmin --> UC8
+    CommitteeAdmin --> UC9
+
+    Principal --> UC7
+    Principal --> UC8
+    Principal --> UC10

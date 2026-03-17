@@ -1,0 +1,70 @@
+erDiagram
+    SUPER_ADMIN {
+        ObjectId _id PK
+        string name
+        string email
+        string password
+        string role
+    }
+
+    ORGANIZATION {
+        ObjectId _id PK
+        string name
+        string slug
+        boolean isVerified
+        string status
+        datetime createdAt
+    }
+
+    USER {
+        ObjectId _id PK
+        string name
+        string email
+        string password
+        string role
+        string college
+        ObjectId orgId FK
+        string studentId
+        string department
+        int year
+        datetime createdAt
+    }
+
+    COMPLAINT {
+        ObjectId _id PK
+        string trackingId
+        string title
+        string description
+        string category
+        string status
+        string priority
+        string college
+        ObjectId orgId FK
+        boolean identityRevealed
+        datetime createdAt
+    }
+
+    COMPLAINT_TRACKING {
+        ObjectId _id PK
+        string trackingId FK
+        string encryptedUserId
+        string college
+        ObjectId orgId FK
+        array accessLog
+        datetime createdAt
+    }
+
+    CHAT_MESSAGE {
+        ObjectId _id PK
+        string trackingId FK
+        string senderRole
+        string message
+        datetime createdAt
+    }
+
+    SUPER_ADMIN ||--o{ ORGANIZATION : "approves"
+    ORGANIZATION ||--o{ USER : "has members"
+    USER ||--o{ COMPLAINT_TRACKING : "files via"
+    COMPLAINT_TRACKING ||--|| COMPLAINT : "maps to"
+    COMPLAINT ||--o{ CHAT_MESSAGE : "has messages"
+    ORGANIZATION ||--o{ COMPLAINT : "receives"

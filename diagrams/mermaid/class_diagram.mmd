@@ -1,0 +1,76 @@
+classDiagram
+    class SuperAdmin {
+        +String name
+        +String email
+        +approveInstitution(orgId)
+        +rejectInstitution(orgId)
+        +listAllInstitutions()
+    }
+
+    class Institution {
+        +String name
+        +String slug
+        +Boolean isVerified
+        +String status
+        +createSlug()
+    }
+
+    class User {
+        +String name
+        +String email
+        +String role
+        +String college
+        +ObjectId orgId
+        +String studentId
+        +comparePassword(password)
+    }
+
+    class Complaint {
+        +String trackingId
+        +String title
+        +String description
+        +String category
+        +String status
+        +Boolean identityRevealed
+        +updateStatus(status, adminId, comment)
+        +addAdminNote(note, adminId)
+    }
+
+    class ComplaintTracking {
+        +String trackingId
+        +String encryptedUserId
+        +Array accessLog
+        +createTracking(trackingId, userId)
+        +verifyOwnership(trackingId, userId)
+        +getUserIdByTracking(trackingId, adminId, reason)
+    }
+
+    class ChatMessage {
+        +String trackingId
+        +String senderRole
+        +String message
+        +Date createdAt
+    }
+
+    class AuthController {
+        +register(req, res)
+        +login(req, res)
+        +logout(req, res)
+    }
+
+    class ComplaintController {
+        +fileComplaint(req, res)
+        +getComplaintByTracking(req, res)
+        +getAllComplaints(req, res)
+        +updateComplaintStatus(req, res)
+        +revealIdentity(req, res)
+    }
+
+    SuperAdmin --> Institution : approves
+    Institution "1" --> "many" User : contains
+    User --> ComplaintTracking : files complaint via
+    ComplaintTracking --> Complaint : maps to
+    Complaint "1" --> "many" ChatMessage : has
+    AuthController --> User : manages
+    ComplaintController --> Complaint : manages
+    ComplaintController --> ComplaintTracking : uses
