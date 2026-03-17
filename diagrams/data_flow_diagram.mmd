@@ -1,0 +1,33 @@
+flowchart TD
+    principal(["Principal"])
+    superadmin(["Super Admin"])
+    student(["Student"])
+    admin(["Committee Member"])
+    
+    subgraph VoiSafe Platform
+        ui[("React.js Frontend")]
+        api[("Express Node.js API")]
+        socket[("Socket.IO Engine")]
+        db[(MongoDB Atlas)]
+        auth[("JWT Auth Middleware")]
+        anon[("Anonymization Engine")]
+    end
+    
+    principal -- "1. Register College" --> api
+    api -- "2. Save Pending Org" --> db
+    superadmin -- "3. Approve Org" --> db
+    principal -- "4. Add Committee" --> api
+    
+    student -- "5. Login (Email / GR No)" --> auth
+    auth -- "6. Returns JWT" --> student
+    
+    student -- "7. Submit Complaint" --> ui
+    ui -- "8. POST /submitComplaint" --> anon
+    anon -- "9. Strip ID & Generate Tracking ID" --> db
+    
+    admin -- "10. View Complaints" --> api
+    api -- "11. Fetch Data" --> db
+    
+    student -- "12. Connect WebSocket" --> socket
+    admin -- "13. Connect WebSocket" --> socket
+    socket -- "14. Anonymous Chat" --> db

@@ -1,0 +1,34 @@
+flowchart LR
+    Student(["Student"])
+    Committee(["Committee Member"])
+    Principal(["Principal / Inst. Admin"])
+    SuperAdmin(["Super Admin (SaaS Owner)"])
+
+    subgraph VoiSafe System
+        direction TB
+        UC1(Register/Login via JWT)
+        UC2(Submit Anonymous Complaint)
+        UC3(Track Complaint Status via ID)
+        UC4(Engage in Anonymous Chat)
+        UC5(Review & Update Complaint Status)
+        UC6(Register New Institution)
+        UC7(Approve Institution)
+        UC8(Create Committee Members)
+    end
+
+    Student --- UC1
+    Student --- UC2
+    Student --- UC3
+    Student --- UC4
+    
+    Committee --- UC1
+    Committee --- UC4
+    Committee --- UC5
+    
+    Principal --- UC1
+    Principal --- UC6
+    Principal --- UC8
+    Principal --- UC5
+    
+    SuperAdmin --- UC1
+    SuperAdmin --- UC7

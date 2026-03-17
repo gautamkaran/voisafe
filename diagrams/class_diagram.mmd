@@ -1,0 +1,49 @@
+classDiagram
+    class SuperAdmin {
+        +String adminId
+        +String email
+        +approveInstitution(institutionId)
+    }
+    class User {
+        +String userId
+        +String institutionId
+        +String email
+        +String role
+        +login()
+        +logout()
+    }
+    class Institution {
+        +String institutionId
+        +String name
+        +String domain
+        +Boolean isVerified
+        +createCommittee()
+        +registerCollege()
+    }
+    class Complaint {
+        +String trackingId
+        +String category
+        +String description
+        +String status
+        +Date createdAt
+        +updateStatus()
+    }
+    class ChatSession {
+        +String sessionId
+        +String trackingId
+        +startSession()
+        +endSession()
+    }
+    class ChatMessage {
+        +String messageId
+        +String content
+        +Date timestamp
+        +String senderPseudoId
+        +sendMessage()
+    }
+    
+    SuperAdmin "1" -- "*" Institution : approves >
+    Institution "1" -- "*" User : has >
+    Institution "1" -- "*" Complaint : owns >
+    Complaint "1" -- "1" ChatSession : has >
+    ChatSession "1" -- "*" ChatMessage : contains >

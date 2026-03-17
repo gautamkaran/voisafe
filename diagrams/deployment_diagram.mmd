@@ -1,0 +1,16 @@
+flowchart TD
+    client["Client Devices<br>(Desktop, Mobile OS)"]
+    dns["DNS / CDN"]
+    
+    subgraph Cloud Infrastructure ["VPS / Cloud Server"]
+        subgraph Docker Host ["Docker Engine"]
+            frontend["Frontend Container<br>[React.js / Next.js]"]
+            backend["API Container<br>[Node.js & Socket.IO]"]
+        end
+        atlas["Database Cluster (MongoDB Atlas)<br>[Replica Set]"]
+    end
+
+    client -- "HTTPS / WSS" --> dns
+    dns -- "Web Traffic" --> frontend
+    dns -- "API / WebSocket" --> backend
+    backend -- "Mongoose Driver" --> atlas

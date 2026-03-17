@@ -1,0 +1,43 @@
+sequenceDiagram
+    participant SA as Super Admin
+    participant P as Principal
+    participant S as Student
+    participant UI as React Frontend
+    participant API as Node.js API
+    participant SOC as Socket.IO Server
+    participant DB as MongoDB
+    participant A as Committee Member
+
+    rect rgb(240, 240, 240)
+    note right of SA: Phase 1: Institution Onboarding
+    P->>UI: 1. Registers New College
+    UI->>API: POST /register
+    API->>DB: Save Institution (isVerified: false)
+    SA->>API: 2. Approves Institution
+    API->>DB: Update Institution (isVerified: true)
+    P->>UI: 3. Logs in & Creates Committee
+    UI->>API: POST /register (role: committee)
+    API->>DB: Save Committee Users
+    end
+
+    rect rgb(240, 248, 255)
+    note right of SA: Phase 2: Grievance Management
+    S->>UI: 4. Submits Grievance Form
+    UI->>API: POST /submitComplaint (with JWT)
+    API->>API: Verify JWT & Strip User ID
+    API->>API: Generate unique Tracking ID
+    API->>DB: 5. Save Complaint (No User Link)
+    DB-->>API: Success
+    API-->>UI: Return Tracking ID
+    UI-->>S: Display Success & Tracking ID
+    
+    A->>UI: 6. Opens Complaint Details
+    UI->>SOC: Join Chat Room (Tracking ID)
+    S->>UI: Opens Status Page
+    UI->>SOC: Join Chat Room (Tracking ID)
+    
+    A->>SOC: 7. emit('sendMessage', pseudoAdminId, text)
+    SOC->>DB: Save Message
+    SOC-->>UI: broadcast('newMessage', text)
+    UI-->>S: View Message in Real-time
+    end

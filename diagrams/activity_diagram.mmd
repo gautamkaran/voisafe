@@ -1,0 +1,20 @@
+stateDiagram-v2
+    [*] --> RegisterInstitution : 1. Principal Registers College
+    RegisterInstitution --> PendingVerification : isVerified = false
+    PendingVerification --> SuperAdminApproves : 2. Super Admin Approves
+    SuperAdminApproves --> CreateCommittee : 3. Principal Creates Committee
+    
+    CreateCommittee --> StudentLogin : 4. Setup Complete
+    
+    StudentLogin --> Dashboard : JWT Validated
+    Dashboard --> SubmitComplaint : 5. Student Files Complaint
+    SubmitComplaint --> AnonymizationEngine
+    AnonymizationEngine --> StripIdentity : Remove User ID
+    StripIdentity --> GenerateTrackingID
+    GenerateTrackingID --> StoreComplaint : Save to DB
+    StoreComplaint --> ReturnTrackingID
+    ReturnTrackingID --> TrackStatus
+    TrackStatus --> OpenChatBridge : Initiate Socket.IO
+    OpenChatBridge --> RealTimeChat : Anonymous Comm.
+    RealTimeChat --> StatusResolved : 6. Committee Resolves
+    StatusResolved --> [*]
