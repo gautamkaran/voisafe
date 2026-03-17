@@ -1,5 +1,5 @@
-<div align="center">
-  <h1>🛡️ VoiSafe: Anonymous Grievance Management System</h1>
+﻿<div align="center">
+  <h1>ðŸ›¡ï¸ VoiSafe: Anonymous Grievance Management System</h1>
   <p><strong>A secure, multi-tenant SaaS approach to grievance management empowering students to report without fear of identity exposure.</strong></p>
 </div>
 
@@ -10,7 +10,7 @@
 ### 1.1. Background
 VoiSafe represents a cutting-edge Software-as-a-Service (SaaS) approach to grievance management in educational institutions, addressing a critical gap in anonymous complaint handling. Traditional grievance systems often fail to maintain true anonymity, creating barriers for students who fear retaliation when reporting sensitive issues like misconduct or harassment. VoiSafe addresses this fundamental challenge by ensuring that students can voice concerns without their identity ever being exposed in the database or to the administrators. 
 
-Educational institutions face increasing pressure to create transparent and trustworthy environments. VoiSafe’s innovative architecture uses **Identity Decoupling** and **Real-time Anonymous Communication**. Unlike traditional systems, VoiSafe provides a secure, two-way chat portal where administrators can investigate complaints and interact with students without ever knowing their names. This ensures a perfect balance between transparency and absolute privacy protection.
+Educational institutions face increasing pressure to create transparent and trustworthy environments. VoiSafeâ€™s innovative architecture uses **Identity Decoupling** and **Real-time Anonymous Communication**. Unlike traditional systems, VoiSafe provides a secure, two-way chat portal where administrators can investigate complaints and interact with students without ever knowing their names. This ensures a perfect balance between transparency and absolute privacy protection.
 
 The system is built using the **MERN stack** (MongoDB, Express.js, React, and Node.js) and leverages **Socket.IO** for real-time encrypted messaging. The multi-tenant architecture allows the platform to onboard multiple institutions, providing each with a dedicated, secure dashboard for their Principal and Grievance Committee, ensuring operational efficiency and compliance with modern privacy standards.
 
@@ -124,35 +124,35 @@ Modeled holistically across 4 entity models:
 
 ### 4.1 ER Diagram
 Displays the completely isolated entities executing to ensure absolute anonymity. Notice there is no direct relationship between the `Users` and `Complaints` tables.
-![Er Diagram](diagrams/er_diagram.svg)
+![Er Diagram](.github/diagrams/er_diagram.svg)
 
 ### 4.2 Data Flow Diagram
 Tracks the lifecycle processes of user routing, complaint sanitization, database fetching, and subsequent socket linkages.
-![Data Flow Diagram](diagrams/data_flow_diagram.svg)
+![Data Flow Diagram](.github/diagrams/data_flow_diagram.svg)
 
 ### 4.3 Structural diagrams
 
 **4.3.1 Use case diagram**
-![Use Case Diagram](diagrams/use_case_diagram.svg)
+![Use Case Diagram](.github/diagrams/use_case_diagram.svg)
 
 **4.3.2 Class diagram**
-![Class Diagram](diagrams/class_diagram.svg)
+![Class Diagram](.github/diagrams/class_diagram.svg)
 
 **4.3.3 Component diagram**
-![Component Diagram](diagrams/component_diagram.svg)
+![Component Diagram](.github/diagrams/component_diagram.svg)
 
 **4.3.4 Deployment diagram**
-![Deployment Diagram](diagrams/deployment_diagram.svg)
+![Deployment Diagram](.github/diagrams/deployment_diagram.svg)
 
 **4.3.5 Activity diagram**
-![Activity Diagram](diagrams/activity_diagram.svg)
+![Activity Diagram](.github/diagrams/activity_diagram.svg)
 
 **4.3.6 Sequence diagram**
-![Sequence Diagram](diagrams/sequence_diagram.svg)
+![Sequence Diagram](.github/diagrams/sequence_diagram.svg)
 
 ### 4.4 Architectural Design
 Illustrates the central deployment of the full system stack as a Cloud platform.
-![Architectural Design](diagrams/architectural_design.svg)
+![Architectural Design](.github/diagrams/architectural_design.svg)
 
 ### 4.5 Algorithm: Code Execution in Voisafe
 
@@ -201,12 +201,12 @@ TC logic covers heavy scrutiny across Authentication validation, Anonymization p
 
 | Test Case ID | Test Module | Test Description (Scenario) | Expected Output | Actual Output | Status |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **TC-01** | `Authentication` | User attempts to login using a valid Student GR No. and Password. | System validates JWT token and redirects to Student Dashboard. | Redirects to Student Dashboard. | ✅ **Pass** |
-| **TC-02** | `Authentication` | User attempts to login with an unregistered GR No. or wrong password. | Server returns `401 Unauthorized` and displays "Invalid Credentials". | "Invalid Credentials" error shown. | ✅ **Pass** |
-| **TC-03** | `Anonymization Engine` | Student submits a new grievance containing their personal details in the backend payload. | Backend strips all user mappings, generates a `Tracking ID`, and saves complaint without name/email. | Complaint saved purely under a Tracking ID. | ✅ **Pass** |
-| **TC-04** | `Real-Time Socket` | Committee Admin types a message into the Tracking ID chat room. | Socket emits the message instantly and UI displays "Admin is typing..." followed by the message. | Message broadcasts in <200ms. | ✅ **Pass** |
-| **TC-05** | `Role-Based Access` | A Student attempts to access the Committee Dashboard URL (`/admin/dashboard`). | Middleware detects the wrong JWT role and blocks the route, showing `403 Forbidden`. | Access Denied redirect triggers. | ✅ **Pass** |
-| **TC-06** | `Status Update` | Admin changes the state of a Ticket from "Pending" to "Resolved". | The Database updates status, and the Student's tracker instantly changes color reflecting "Resolved". | Status updates synchronously. | ✅ **Pass** |
+| **TC-01** | `Authentication` | User attempts to login using a valid Student GR No. and Password. | System validates JWT token and redirects to Student Dashboard. | Redirects to Student Dashboard. | âœ… **Pass** |
+| **TC-02** | `Authentication` | User attempts to login with an unregistered GR No. or wrong password. | Server returns `401 Unauthorized` and displays "Invalid Credentials". | "Invalid Credentials" error shown. | âœ… **Pass** |
+| **TC-03** | `Anonymization Engine` | Student submits a new grievance containing their personal details in the backend payload. | Backend strips all user mappings, generates a `Tracking ID`, and saves complaint without name/email. | Complaint saved purely under a Tracking ID. | âœ… **Pass** |
+| **TC-04** | `Real-Time Socket` | Committee Admin types a message into the Tracking ID chat room. | Socket emits the message instantly and UI displays "Admin is typing..." followed by the message. | Message broadcasts in <200ms. | âœ… **Pass** |
+| **TC-05** | `Role-Based Access` | A Student attempts to access the Committee Dashboard URL (`/admin/dashboard`). | Middleware detects the wrong JWT role and blocks the route, showing `403 Forbidden`. | Access Denied redirect triggers. | âœ… **Pass** |
+| **TC-06** | `Status Update` | Admin changes the state of a Ticket from "Pending" to "Resolved". | The Database updates status, and the Student's tracker instantly changes color reflecting "Resolved". | Status updates synchronously. | âœ… **Pass** |
 
 ---
 
@@ -275,11 +275,11 @@ Unit testing involves testing individual components and discrete API functions i
 6. **Challenges**: Time-consuming mock setups for Socket WSS states mimicking active WSS handshakes.
 
 #### 5.3.2 Integrated Testing
-Integrated testing verifies the cross-boundary interactions between modules (e.g., React Frontend ↔ Express Backend API ↔ Socket.IO Engine ↔ MongoDB Atlas).
+Integrated testing verifies the cross-boundary interactions between modules (e.g., React Frontend â†” Express Backend API â†” Socket.IO Engine â†” MongoDB Atlas).
 1. **Definition and Purpose**: Ensures completely seamless data flow from the moment a student hits `POST /submitComplaint` to the exact moment an Admin receives the `Tracking ID` on their Dashboard.
 2. **Types of Integrated Testing**:
-   - **Top-Down**: Initiating a ticket on the React UI → watching it hit the Express API → verifying MongoDB insertion.
-   - **Bottom-Up**: Testing MongoDB User creation → validating JWT return from AuthController → unlocking the frontend Dashboard.
+   - **Top-Down**: Initiating a ticket on the React UI â†’ watching it hit the Express API â†’ verifying MongoDB insertion.
+   - **Bottom-Up**: Testing MongoDB User creation â†’ validating JWT return from AuthController â†’ unlocking the frontend Dashboard.
 3. **Testing Scenarios**: Concurrent Message send/receive across student and admin interfaces, live Status Update synchronizations, and testing the `isVerified` Super Admin approval gateway.
 4. **Tools and Frameworks**: Postman (for REST testing), Socket.IO tester scripts, multiple concurrent browser instances verifying role-blockades.
 5. **Benefits**: Early Detection of issues like token mismatch drops across the WSS protocol and vastly improved real-time tracking reliability.
@@ -287,17 +287,17 @@ Integrated testing verifies the cross-boundary interactions between modules (e.g
 #### 5.3.3 Beta Testing
 Beta testing involved real users testing the multi-tenant SaaS domains in a near-production environment.
 1. **Objective**: Validate real-world functionality, identify usability bugs, and gather critical feedback on the psychological safety of the Anonymity features.
-2. **User Selection**: 15–20 participants (a mix of mock students, faculty, and mock Super Admins) generating diverse workflow feedback.
+2. **User Selection**: 15â€“20 participants (a mix of mock students, faculty, and mock Super Admins) generating diverse workflow feedback.
 3. **Testing Environment**: Deployed frontend/backend pairs accessed across modern Desktop browsers and mobile Safari/Chrome devices.
 4. **Feedback Collection**: Google Forms, in-app UX surveys, and direct developer observation of routing flows.
 5. **Iteration and Improvement**: Based on feedback, we implemented strictly immediate typing indicators, darker UI contrast modes, and refined mobile navigation wrappers.
-6. **Duration**: 2–3 weeks of active ticket generation cycles.
+6. **Duration**: 2â€“3 weeks of active ticket generation cycles.
 
 ### 5.4 Modifications and Improvements
 - **UI/UX Enhancements**: Added real-time typing indicators across Socket lines, granular message WSS timestamps, and a dark mode configuration for comfortable administrative viewing.
 - **Performance Optimization**: Reduced WSS reconnection delays upon network drops and optimized React message-list rendering using unique keys.
 - **Security Improvements**: Strengthened XSS input protection on the Complaint Description text area and enforced strict role-validation interceptors denying Students access to the `useAdmin()` hooks.
-- **Feature Enhancements**: Granular ticket status tracking (Pending → Resolved pipelines) and automated session-close locking once a ticket is marked Closed.
+- **Feature Enhancements**: Granular ticket status tracking (Pending â†’ Resolved pipelines) and automated session-close locking once a ticket is marked Closed.
 - **Scalability**: Shifted from global Socket broadcasting to isolated, hyper-specific Room-based Socket joins (Using the Tracking ID as the immutable room key) for highly efficient API broadcasting.
 - **Other**: Fixed specific edge-case race conditions where early sockets attempted joining rooms before the DB returned the Ticket ID.
 
@@ -306,11 +306,11 @@ Beta testing involved real users testing the multi-tenant SaaS domains in a near
 ## CHAPTER 6: RESULTS AND DISCUSSION
 
 ### 6.1 Code and Output
-The VoiSafe codebase is structured across two isolated module scopes — `web/` (Next.js Frontend) and `server/` (Node.js Express API). Below are key implementation snapshots demonstrating the core features described throughout this document.
+The VoiSafe codebase is structured across two isolated module scopes â€” `web/` (Next.js Frontend) and `server/` (Node.js Express API). Below are key implementation snapshots demonstrating the core features described throughout this document.
 
-#### ❖ Backend Code
+#### â– Backend Code
 
-**`authController.js` — Multi-Tenant Registration Logic**
+**`authController.js` â€” Multi-Tenant Registration Logic**
 ```javascript
 const register = async (req, res, next) => {
     const { name, email, password, role, college, studentId } = req.body;
@@ -344,7 +344,7 @@ const register = async (req, res, next) => {
 };
 ```
 
-**`complaintController.js` — Core Anonymization Engine (Identity Decoupling)**
+**`complaintController.js` â€” Core Anonymization Engine (Identity Decoupling)**
 ```javascript
 const fileComplaint = async (req, res, next) => {
     const { title, description, category } = req.body;
@@ -357,11 +357,11 @@ const fileComplaint = async (req, res, next) => {
         return !!(await Complaint.findOne({ trackingId: id }));
     });
 
-    // STEP 2: Create complaint WITHOUT userId  ← CORE ANONYMITY FEATURE
+    // STEP 2: Create complaint WITHOUT userId  â† CORE ANONYMITY FEATURE
     const complaint = await Complaint.create({
         trackingId, title, description, category,
         college, orgId, status: 'pending',
-        // NOTE: No userId field — identity is intentionally decoupled
+        // NOTE: No userId field â€” identity is intentionally decoupled
     });
 
     // STEP 3: Store encrypted identity mapping in SEPARATE collection
@@ -376,11 +376,11 @@ const fileComplaint = async (req, res, next) => {
 };
 ```
 
-#### ❖ Backend Models
+#### â– Backend Models
 
-**`Complaint.js` — No `userId` Field (Privacy by Design)**
+**`Complaint.js` â€” No `userId` Field (Privacy by Design)**
 ```javascript
-// ⚠️ CRITICAL PRIVACY FEATURE: NO userId FIELD
+// âš ï¸ CRITICAL PRIVACY FEATURE: NO userId FIELD
 // Even if this collection is compromised, student identity cannot be determined.
 const complaintSchema = new mongoose.Schema({
     trackingId:  { type: String, required: true, unique: true, immutable: true },
@@ -393,11 +393,11 @@ const complaintSchema = new mongoose.Schema({
     orgId:       { type: mongoose.Schema.Types.ObjectId, ref: 'Organization' },
     status:      { type: String, enum: ['pending', 'under-investigation',
                    'resolved', 'closed'], default: 'pending' },
-    // userId intentionally ABSENT — core anonymity guarantee
+    // userId intentionally ABSENT â€” core anonymity guarantee
 }, { timestamps: true });
 ```
 
-**`User.js` — RBAC Roles & Multi-Tenant Link**
+**`User.js` â€” RBAC Roles & Multi-Tenant Link**
 ```javascript
 const userSchema = new mongoose.Schema({
     name:     { type: String, required: true },
@@ -422,34 +422,34 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 ```
 
-#### ❖ MongoDB Database Collections
+#### â– MongoDB Database Collections
 The database runs on **MongoDB Atlas** with three primary collections:
-- **`organizations`** — Stores each college tenant with `isVerified` flag.
-- **`users`** — All users (students, admins, committees) linked via `orgId`.
-- **`complaints`** — Anonymous complaint records keyed by `trackingId` (no user link).
-- **`complainttackings`** — Secure encrypted identity-to-trackingId mapping (separate from complaints).
+- **`organizations`** â€” Stores each college tenant with `isVerified` flag.
+- **`users`** â€” All users (students, admins, committees) linked via `orgId`.
+- **`complaints`** â€” Anonymous complaint records keyed by `trackingId` (no user link).
+- **`complainttackings`** â€” Secure encrypted identity-to-trackingId mapping (separate from complaints).
 
-#### ❖ Application Output Screenshots
+#### â– Application Output Screenshots
 
-**Figure 6.1.1 — Landing Page (Home Screen)**
+**Figure 6.1.1 â€” Landing Page (Home Screen)**
 
-![VoiSafe Home Page](.github/images/screenshot_home.png)
+![VoiSafe Home Page](.github/diagrams/screenshot_home.png)
 
 > The VoiSafe landing page showcasing the platform's core value proposition: *"Speak Up Safely & Securely"*. Features include Submit Complaint and Track Status buttons, and clear feature highlights (100% Anonymous, Real-time Communication, Enterprise Security).
 
 ---
 
-**Figure 6.1.2 — Login Screen**
+**Figure 6.1.2 â€” Login Screen**
 
-![VoiSafe Login Page](.github/images/screenshot_login.png)
+![VoiSafe Login Page](.github/diagrams/screenshot_login.png)
 
 > Secure login page for all user roles (Student, Committee, Principal, Super Admin). Users authenticate with their college email and password. JWT token is generated on successful login.
 
 ---
 
-**Figure 6.1.3 — Student Registration Screen**
+**Figure 6.1.3 â€” Student Registration Screen**
 
-![VoiSafe Register Page](.github/images/screenshot_register.png)
+![VoiSafe Register Page](.github/diagrams/screenshot_register.png)
 
 > Registration screen capturing College/Institution name, Student ID, Department, and Year of Study. The `College/Institution` field is the multi-tenant key that links the student to their specific `Organization` record in the database.
 
@@ -559,3 +559,4 @@ The architecture leaves extensive room enabling subsequent scaling patches effic
 4. **Socket.IO Documentation**: [socket.io/docs](https://socket.io/docs)
 5. **W3Schools Documentation Matrix**: [w3schools.com](https://www.w3schools.com)
 6. **Diagram Mapping Framework**: [app.diagrams.net](https://app.diagrams.net/)
+

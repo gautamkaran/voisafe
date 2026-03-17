@@ -1,0 +1,36 @@
+graph TB
+    subgraph Cloud["☁️ Cloud Deployment"]
+        subgraph Frontend["Vercel - Frontend"]
+            NextJS["Next.js App\n(React + Tailwind)"]
+        end
+
+        subgraph Backend["Render - Backend"]
+            Express["Express.js API\nPort 5000"]
+            SocketIO["Socket.IO\nWSS Server"]
+        end
+
+        subgraph Database["MongoDB Atlas"]
+            DB[("MongoDB\nCloud Cluster")]
+        end
+    end
+
+    subgraph Users["Users"]
+        Student["🎓 Student\n(Browser)"]
+        Admin["👥 Committee Admin\n(Browser)"]
+        Principal["🏫 Principal\n(Browser)"]
+        SuperAdmin["👑 Super Admin\n(Browser)"]
+    end
+
+    Student -->|"HTTPS"| NextJS
+    Admin -->|"HTTPS"| NextJS
+    Principal -->|"HTTPS"| NextJS
+    SuperAdmin -->|"HTTPS"| NextJS
+
+    NextJS -->|"REST API calls\nHTTPS/JSON"| Express
+    NextJS -->|"WebSocket\nWSS"| SocketIO
+
+    Express -->|"Mongoose ODM"| DB
+    SocketIO -->|"Chat messages"| DB
+
+    Express -->|"JWT Cookies"| NextJS
+    SocketIO -->|"Real-time events"| NextJS
