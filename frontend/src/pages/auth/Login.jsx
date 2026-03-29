@@ -9,7 +9,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  console.log(API_URL);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
