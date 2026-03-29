@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import config from "../config/config";
+import config from "../config/config.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -55,18 +55,16 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// 🔥 Index
-userSchema.index({ email: 1 });
+// 🔥 Unique indices are handled at the field level with 'unique: true'
 
 // 🔐 Password Hash
-userSchema.pre("save", async function (next) {
+userSchema.pre("save", async function () {
   try {
-    if (!this.isModified("password")) return next();
+    if (!this.isModified("password")) return;
 
     this.password = await bcrypt.hash(this.password, 10);
-    next();
   } catch (error) {
-    next(error);
+    throw error;
   }
 });
 

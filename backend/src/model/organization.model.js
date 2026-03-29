@@ -65,7 +65,6 @@ const organizationSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-organizationSchema.index({ domain: 1 });
-organizationSchema.index({ collegeCode: 1 });
+// 🔥 Unique indices are handled at the field level with 'unique: true'
 
 export default mongoose.model("Organization", organizationSchema);

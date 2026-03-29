@@ -8,6 +8,8 @@ const {
   JWT_EXPIRES_IN,
   JWT_REFRESH_SECRET,
   JWT_REFRESH_EXPIRES_IN,
+  SUPER_ADMIN_EMAIL,
+  SUPER_ADMIN, // This is the password
 } = process.env;
 
 // Validate required environment variables
@@ -31,6 +33,11 @@ const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || "1d",
     refreshSecret: process.env.JWT_REFRESH_SECRET || "your_jwt_refresh_secret",
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
+  },
+
+  admin: {
+    email: SUPER_ADMIN_EMAIL || "admin@voisafe.org",
+    password: SUPER_ADMIN || "admin123",
   },
 };
 
