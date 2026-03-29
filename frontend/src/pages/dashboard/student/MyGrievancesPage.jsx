@@ -26,7 +26,12 @@ const GrievanceChat = ({ complaintId }) => {
   const [msgs, setMsgs] = useState([]);
   const [newMsg, setNewMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const scrollRef = React.useRef(null);
   const user = JSON.parse(localStorage.getItem('voisafe_user') || '{}');
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const fetchMsgs = useCallback(async () => {
     try {
@@ -35,7 +40,9 @@ const GrievanceChat = ({ complaintId }) => {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
-      if (data.success) setMsgs(data.data);
+      if (data.success) {
+        setMsgs(data.data);
+      }
     } catch { /* Silent */ }
   }, [complaintId]);
 
@@ -44,6 +51,10 @@ const GrievanceChat = ({ complaintId }) => {
     const timer = setInterval(fetchMsgs, 5000);
     return () => clearInterval(timer);
   }, [fetchMsgs]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [msgs]);
 
   const onSend = async (e) => {
     e.preventDefault();
@@ -99,6 +110,7 @@ const GrievanceChat = ({ complaintId }) => {
               </div>
             ))
           )}
+          <div ref={scrollRef} />
        </div>
        <form onSubmit={onSend} className="p-3 border-t border-white/5 bg-white/[0.01] rounded-b-3xl">
           <div className="relative">
@@ -311,97 +323,8 @@ const MyGrievancesPage = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto pr-1 scrollbar-hide space-y-8 relative z-10 font-bold pb-4">
-              {/* Status Tracker */}
-              <div className="flex items-center justify-between px-2 shrink-0">
-                 {['pending', 'in-progress', 'resolved'].map((step, i) => (
-                   <React.Fragment key={step}>
-                      <div className="flex flex-col items-center gap-2">
-                         <div className={`w-9 h-9 rounded-2xl flex items-center justify-center border-2 transition-all ${
-                           selected.status === step ? 'bg-indigo-600 border-indigo-400 text-white shadow-lg shadow-indigo-600/40 scale-110' : 
-                           (i < ['pending', 'in-progress', 'resolved'].indexOf(selected.status)) ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' :
-                           'bg-slate-900 border-white/5 text-slate-700'
-                         }`}>
-                           {i < ['pending', 'in-progress', 'resolved'].indexOf(selected.status) ? <CheckCircle2 size={16} /> : <span className="text-[10px]">{i + 1}</span>}
-                         </div>
-                         <p className={`text-[8px] font-black uppercase tracking-widest ${selected.status === step ? 'text-indigo-400' : 'text-slate-600'}`}>
-                           {step.replace('-', ' ')}
-                         </p>
-                      </div>
-                      {i < 2 && <div className={`flex-1 h-[2px] mx-2 mb-4 rounded-full transition-colors ${i < ['pending', 'in-progress', 'resolved'].indexOf(selected.status) ? 'bg-emerald-500/40' : 'bg-white/5'}`} />}
-                   </React.Fragment>
-                 ))}
-              </div>
-
-              {/* Grid Metadata */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                 {[
-                   { label: 'Category Shard', value: selected.category, icon: Filter },
-                   { label: 'Signal Priority', value: selected.priority || 'Medium', icon: Shield, color: selected.priority === 'high' ? 'text-rose-400' : 'text-indigo-300' },
-                   { label: 'ISO Dispatch', value: new Date(selected.createdAt).toLocaleDateString(), icon: Clock }
-                 ].map(m => (
-                   <div key={m.label} className="bg-slate-900 border border-white/5 p-4 rounded-3xl shadow-inner">
-                      <p className="text-[8px] text-slate-600 font-black uppercase tracking-widest mb-1.5 flex items-center gap-1.5 opacity-60"><m.icon size={10}/> {m.label}</p>
-                      <p className={`text-[10px] font-black uppercase tracking-tight ${m.color || 'text-white'}`}>{m.value}</p>
-                   </div>
-                 ))}
-              </div>
-
-              {/* Enhanced Toggle Tabs */}
-              <div className="flex gap-2 p-1.5 bg-slate-950 rounded-2xl border border-white/5 shadow-inner shrink-0">
-                 <button 
-                   onClick={() => setShowChat(false)}
-                   className={`flex-1 py-3 px-4 rounded-xl text-[10px] uppercase tracking-[0.25em] font-black transition-all flex items-center justify-center gap-2.5 ${!showChat ? 'bg-indigo-600 text-white shadow-xl translate-z-10' : 'text-slate-600 hover:text-slate-400 hover:bg-white/5'}`}
-                 >
-                   <FileText size={14} /> Signal Audit
-                 </button>
-                 <button 
-                   onClick={() => setShowChat(true)}
-                   className={`flex-1 py-3 px-4 rounded-xl text-[10px] uppercase tracking-[0.25em] font-black transition-all flex items-center justify-center gap-2.5 ${showChat ? 'bg-indigo-600 text-white shadow-xl' : 'text-slate-600 hover:text-slate-400 hover:bg-white/5'}`}
-                 >
-                   <MessageSquare size={14} /> Authority Link
-                 </button>
-              </div>
-
-              {!showChat ? (
-                <div className="space-y-6 animate-fade-in">
-                  <div className="bg-slate-900 border border-white/5 p-6 rounded-[2.5rem] relative overflow-hidden shadow-inner">
-                     <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl" />
-                     <p className="text-[10px] text-indigo-400 font-black uppercase tracking-[0.3em] mb-5 flex items-center gap-2">
-                        <Shield size={12} className="opacity-50"/> Original Transmission
-                     </p>
-                     <p className="text-sm text-slate-100 leading-relaxed font-medium uppercase tracking-tight relative z-10 opacity-90">
-                        {selected.description}
-                     </p>
-                  </div>
-
-                  <div className="bg-slate-900/60 p-7 rounded-[2.5rem] border border-white/5 space-y-6 shadow-2xl">
-                     <div className="flex items-center justify-between border-b border-white/5 pb-4">
-                        <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.3em] flex items-center gap-2">
-                           <Clock size={12} className="opacity-50"/> Authority Log
-                        </p>
-                        <StatusBadge status={selected.status} />
-                     </div>
-                     
-                     {selected.remarks ? (
-                        <div className="bg-indigo-600/10 p-5 rounded-3xl border border-indigo-500/20 italic text-indigo-100 text-[11px] font-bold uppercase tracking-tight leading-relaxed shadow-sm">
-                          "Protocol Remark: {selected.remarks}"
-                        </div>
-                     ) : (
-                        <div className="flex flex-col items-center py-10 opacity-30 gap-4 border border-dashed border-white/5 rounded-3xl">
-                           <Shield className="text-slate-500" size={32} />
-                           <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.4em] text-center px-4">
-                              Awaiting authority audit shard... <br/> No protocol remarks yet.
-                           </p>
-                        </div>
-                     )}
-                  </div>
-                </div>
-              ) : (
-                <div className="animate-fade-in h-[400px]">
-                  <GrievanceChat complaintId={selected._id} />
-                </div>
-              )}
+            <div className="flex-1 overflow-hidden flex flex-col pt-4 relative z-10 font-bold pb-4 h-[450px]">
+               <GrievanceChat complaintId={selected._id} />
             </div>
           </div>
         </div>

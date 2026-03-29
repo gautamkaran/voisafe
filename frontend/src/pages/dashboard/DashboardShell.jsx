@@ -51,12 +51,14 @@ const DashboardShell = () => {
       { name: 'Overview', icon: LayoutDashboard, path: '/dashboard' },
       { name: 'Reviews', icon: MessageSquare, path: '/dashboard/reviews' },
       { name: 'Analytics', icon: BarChart3, path: '/dashboard/analytics' },
+      { name: 'Profile', icon: User, path: '/dashboard/profile' },
     ],
     admin: [
       { name: 'Summary', icon: LayoutDashboard, path: '/dashboard' },
       { name: 'Manage Teams', icon: Users, path: '/dashboard/committees' },
       { name: 'Reports', icon: BarChart3, path: '/dashboard/reports' },
       { name: 'Organization', icon: Settings, path: '/dashboard/settings' },
+      { name: 'Profile', icon: User, path: '/dashboard/profile' },
     ],
     superadmin: [
       { name: 'Command Center', icon: LayoutDashboard, path: '/dashboard' },
@@ -64,6 +66,7 @@ const DashboardShell = () => {
       { name: 'Onboard Institution', icon: Building2, path: '/dashboard/create-org' },
       { name: 'Global Analytics', icon: BarChart3, path: '/dashboard/analytics' },
       { name: 'Settings', icon: Settings, path: '/dashboard/settings' },
+      { name: 'Profile', icon: User, path: '/dashboard/profile' },
     ]
   };
 

@@ -34,7 +34,12 @@ const ResolutionChat = ({ complaintId }) => {
   const [msgs, setMsgs] = useState([]);
   const [newMsg, setNewMsg] = useState('');
   const [loading, setLoading] = useState(false);
+  const scrollRef = React.useRef(null);
   const user = JSON.parse(localStorage.getItem('voisafe_user') || '{}');
+
+  const scrollToBottom = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   const fetchMsgs = useCallback(async () => {
     try {
@@ -52,6 +57,10 @@ const ResolutionChat = ({ complaintId }) => {
     const timer = setInterval(fetchMsgs, 5000);
     return () => clearInterval(timer);
   }, [fetchMsgs]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [msgs]);
 
   const onSend = async (e) => {
     e.preventDefault();
@@ -96,7 +105,7 @@ const ResolutionChat = ({ complaintId }) => {
               <div key={i} className={`flex ${m.senderRole === user.role ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-xs font-medium ${
                   m.senderRole === user.role 
-                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-lg shadow-indigo-600/10' 
+                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-lg shadow-indigo-600/40' 
                     : 'bg-slate-800 text-slate-300 rounded-tl-none border border-white/5'
                 }`}>
                    <p>{m.message}</p>
@@ -107,6 +116,7 @@ const ResolutionChat = ({ complaintId }) => {
               </div>
             ))
           )}
+          <div ref={scrollRef} />
        </div>
        <form onSubmit={onSend} className="p-3 border-t border-white/5 bg-white/[0.01] rounded-b-3xl">
           <div className="relative">

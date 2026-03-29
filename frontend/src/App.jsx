@@ -24,6 +24,7 @@ import ProtectedRoute from "./components/auth/ProtectedRoute";
 import ManageTeamsPage from "./pages/dashboard/admin/ManageTeamsPage";
 import ReportsPage from "./pages/dashboard/admin/ReportsPage";
 import OrganizationSettingsPage from "./pages/dashboard/admin/OrganizationSettingsPage";
+import ProfilePage from './pages/dashboard/ProfilePage';
 import ResolutionQueuePage from "./pages/dashboard/committee/ResolutionQueuePage";
 import MyGrievancesPage from "./pages/dashboard/student/MyGrievancesPage";
 import SubmitGrievancePage from "./pages/dashboard/student/SubmitGrievancePage";
@@ -68,7 +69,10 @@ const App = () => {
             <Route path="settings" element={<ProtectedRoute allowedRoles={["admin", "superadmin"]}><OrganizationSettingsByRole/></ProtectedRoute>} />
             <Route path="reviews" element={<ProtectedRoute allowedRoles={["admin", "committee"]}><ResolutionQueuePage /></ProtectedRoute>} />
 
-            {/* Super Admin sub-pages */}
+            {/* Shared Dashboard Sub-routes */}
+            <Route path="profile" element={<ProfilePage />} />
+
+            {/* Super Admin Terminal Routes */}
             <Route path="institutions" element={<ProtectedRoute allowedRoles={["superadmin"]}><AllInstitutionsPage /></ProtectedRoute>} />
             <Route path="create-org" element={<ProtectedRoute allowedRoles={["superadmin"]}><CreateOrganizationPage /></ProtectedRoute>} />
             <Route path="analytics" element={<ProtectedRoute allowedRoles={["superadmin"]}><GlobalAnalyticsPage /></ProtectedRoute>} />

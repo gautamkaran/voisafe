@@ -179,3 +179,33 @@ export const login = async (req, res, next) => {
     next(error);
   }
 };
+
+// @route   POST /api/auth/change-password
+// @desc    Change user password
+export const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    // Find user by ID (from auth middleware)
+    const user = await User.findById(req.user._id).select("+password");
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const isMatch = await user.isPasswordCorrect(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Current password incorrect" });
+    }
+
+    // Update password (pre-save hook in user model handles hashing)
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully"
+    });
+  } catch (error) {
+    next(error);
+  }
+};
