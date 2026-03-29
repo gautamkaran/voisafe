@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Building, GraduationCap, CheckCircle2, Globe, FileText } from "lucide-react";
+import {
+  User,
+  Mail,
+  Lock,
+  Building,
+  GraduationCap,
+  CheckCircle2,
+  Globe,
+  FileText,
+} from "lucide-react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-
-const API_URL = "http://localhost:3000/api";
+import { toast } from "react-toastify";
+import { API_URL } from "../../config/api";
 
 const Register = () => {
   const navigate = useNavigate();
   // State aligns perfectly with backend models (user.model.js and organization.model.js)
   const [formData, setFormData] = useState({
-    name: "", email: "", password: "",
+    name: "",
+    email: "",
+    password: "",
     collegeCode: "", // Used to find Organization or Create Organization
     studentId: "", // Optional for students
     orgName: "", // Used by Admins
@@ -31,7 +41,7 @@ const Register = () => {
     try {
       const payload = { ...formData, role };
       // Remove unused admin fields if registering as student
-      if (role === 'student') {
+      if (role === "student") {
         delete payload.orgName;
         delete payload.domain;
         delete payload.contactEmail;
@@ -40,7 +50,10 @@ const Register = () => {
       const response = await axios.post(`${API_URL}/auth/register`, payload);
       if (response.data.success) {
         localStorage.setItem("voisafe_token", response.data.data.token);
-        localStorage.setItem("voisafe_user", JSON.stringify(response.data.data.user));
+        localStorage.setItem(
+          "voisafe_user",
+          JSON.stringify(response.data.data.user),
+        );
 
         toast.success("Account created successfully! Welcome to VoiSafe.");
 
@@ -51,7 +64,8 @@ const Register = () => {
         }
       }
     } catch (err) {
-      const message = err.response?.data?.message || "Registration failed. Please try again.";
+      const message =
+        err.response?.data?.message || "Registration failed. Please try again.";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -69,7 +83,9 @@ const Register = () => {
             <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">
               Join VoiSafe
             </h1>
-            <p className="text-slate-400 font-medium">Create your secure, anonymous grievance account.</p>
+            <p className="text-slate-400 font-medium">
+              Create your secure, anonymous grievance account.
+            </p>
           </div>
 
           {/* Status feedback is now handled via react-toastify */}
@@ -93,7 +109,9 @@ const Register = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* User Fields (For Both) */}
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Full Name</label>
+                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                  Full Name
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                     <User size={18} />
@@ -111,7 +129,9 @@ const Register = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Email Address</label>
+                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                  Email Address
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                     <Mail size={18} />
@@ -129,7 +149,9 @@ const Register = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Password</label>
+                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                  Password
+                </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                     <Lock size={18} />
@@ -171,7 +193,9 @@ const Register = () => {
             {role === "admin" && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Organization Name</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                    Organization Name
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                       <Building size={16} />
@@ -189,7 +213,9 @@ const Register = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Email Domain</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                    Email Domain
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                       <Globe size={16} />
@@ -207,7 +233,9 @@ const Register = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Contact Email</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                    Contact Email
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                       <Mail size={16} />
@@ -230,7 +258,9 @@ const Register = () => {
             {role === "student" && (
               <div className="grid grid-cols-1 pt-2">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Student ID (Optional - Anonymous)</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                    Student ID (Optional - Anonymous)
+                  </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
                       <GraduationCap size={16} />
@@ -244,7 +274,9 @@ const Register = () => {
                       placeholder="e.g. AP1911..."
                     />
                   </div>
-                  <p className="text-xs text-slate-500 ml-2 mt-1">This forms part of your encrypted decoupled identity.</p>
+                  <p className="text-xs text-slate-500 ml-2 mt-1">
+                    This forms part of your encrypted decoupled identity.
+                  </p>
                 </div>
               </div>
             )}
@@ -259,7 +291,10 @@ const Register = () => {
 
             <p className="text-center text-slate-400 text-sm mt-6">
               Already have an account?{" "}
-              <Link to="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+              <Link
+                to="/login"
+                className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors"
+              >
                 Sign in
               </Link>
             </p>

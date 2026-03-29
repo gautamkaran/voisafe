@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Home from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
@@ -33,7 +33,7 @@ const App = () => {
     <div className="flex flex-col min-h-screen bg-slate-950">
       {!isDashboard && <Header />}
       <ToastContainer theme="dark" position="bottom-right" autoClose={3000} />
-      <main className="flex-grow">
+      <main className="grow">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -72,11 +72,20 @@ const DashboardSelector = () => {
   if (!user) return null;
 
   switch (user.role) {
-    case "student": return <StudentDashboard />;
-    case "committee": return <CommitteeDashboard />;
-    case "admin": return <AdminDashboard />;
-    case "superadmin": return <SuperAdminDashboard />;
-    default: return <div className="p-10 text-white text-center">Role not recognized for terminal access.</div>;
+    case "student":
+      return <StudentDashboard />;
+    case "committee":
+      return <CommitteeDashboard />;
+    case "admin":
+      return <AdminDashboard />;
+    case "superadmin":
+      return <SuperAdminDashboard />;
+    default:
+      return (
+        <div className="p-10 text-white text-center">
+          Role not recognized for terminal access.
+        </div>
+      );
   }
 };
 

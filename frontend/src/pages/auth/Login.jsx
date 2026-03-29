@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import axios from "axios";
-import { toast } from 'react-toastify';
-
-const API_URL = "http://localhost:3000/api";
+import { toast } from "react-toastify";
+import { API_URL } from "../../config/api";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,18 +17,23 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const response = await axios.post(`${API_URL}/auth/login`, formData);
       if (response.data.success) {
         localStorage.setItem("voisafe_token", response.data.data.token);
-        localStorage.setItem("voisafe_user", JSON.stringify(response.data.data.user));
-        
+        localStorage.setItem(
+          "voisafe_user",
+          JSON.stringify(response.data.data.user),
+        );
+
         toast.success(`Welcome back, ${response.data.data.user.name}!`);
         navigate("/dashboard");
       }
     } catch (err) {
-      const message = err.response?.data?.message || "Login failed. Please check your credentials.";
+      const message =
+        err.response?.data?.message ||
+        "Login failed. Please check your credentials.";
       toast.error(message);
     } finally {
       setLoading(false);
@@ -47,47 +51,53 @@ const Login = () => {
             <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">
               Welcome Back
             </h1>
-            <p className="text-slate-400 font-medium">Sign in to your VoiSafe account</p>
+            <p className="text-slate-400 font-medium">
+              Sign in to your VoiSafe account
+            </p>
           </div>
 
           {/* Error notifications are now handled by react-toastify */}
 
           <form onSubmit={handleLogin} className="space-y-6">
-              <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Email Address</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
-                    <Mail size={18} />
-                  </div>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={formData.email}
-                    onChange={handleChange}
-                    className="w-full bg-slate-950/50 border border-slate-700/50 text-white text-sm rounded-xl py-3.5 pl-11 pr-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
-                    placeholder="john@example.com"
-                  />
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                Email Address
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                  <Mail size={18} />
                 </div>
+                <input
+                  type="email"
+                  name="email"
+                  required
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full bg-slate-950/50 border border-slate-700/50 text-white text-sm rounded-xl py-3.5 pl-11 pr-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                  placeholder="john@example.com"
+                />
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">Password</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
-                    <Lock size={18} />
-                  </div>
-                  <input
-                    type="password"
-                    name="password"
-                    required
-                    value={formData.password}
-                    onChange={handleChange}
-                    className="w-full bg-slate-950/50 border border-slate-700/50 text-white text-sm rounded-xl py-3.5 pl-11 pr-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
-                    placeholder="••••••••"
-                  />
+            <div>
+              <label className="block text-sm font-semibold text-slate-300 mb-1.5 ml-1">
+                Password
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500">
+                  <Lock size={18} />
                 </div>
+                <input
+                  type="password"
+                  name="password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full bg-slate-950/50 border border-slate-700/50 text-white text-sm rounded-xl py-3.5 pl-11 pr-4 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all outline-none"
+                  placeholder="••••••••"
+                />
               </div>
+            </div>
 
             <button
               type="submit"
@@ -96,10 +106,13 @@ const Login = () => {
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
-            
+
             <p className="text-center text-slate-400 text-sm mt-6">
               Don't have an account?{" "}
-              <Link to="/register" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+              <Link
+                to="/register"
+                className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors"
+              >
                 Sign up
               </Link>
             </p>

@@ -4,6 +4,7 @@ dotenv.config();
 const {
   PORT,
   DB_URI,
+  MONGO_URI,
   JWT_SECRET,
   JWT_EXPIRES_IN,
   JWT_REFRESH_SECRET,
@@ -12,8 +13,10 @@ const {
   SUPER_ADMIN, // This is the password
 } = process.env;
 
+const resolvedDbUri = DB_URI || MONGO_URI || "mongodb://mongo:27017/voisafe";
+
 // Validate required environment variables
-if (!DB_URI || !JWT_SECRET || !JWT_REFRESH_SECRET) {
+if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
   throw new Error(
     "Required environment variables are missing. Please check your .env file.",
   );
@@ -25,7 +28,7 @@ const config = {
   },
 
   database: {
-    uri: DB_URI,
+    uri: resolvedDbUri,
   },
 
   jwt: {
