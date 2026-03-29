@@ -3,7 +3,6 @@ dotenv.config();
 
 const {
   PORT,
-  DB_URI,
   MONGO_URI,
   JWT_SECRET,
   JWT_EXPIRES_IN,
@@ -13,8 +12,6 @@ const {
   SUPER_ADMIN_EMAIL,
   SUPER_ADMIN, // This is the password
 } = process.env;
-
-const resolvedDbUri = DB_URI || MONGO_URI || "mongodb://mongo:27017/voisafe";
 
 // Validate required environment variables
 if (!JWT_SECRET || !JWT_REFRESH_SECRET) {
@@ -29,7 +26,7 @@ const config = {
   },
 
   database: {
-    uri: resolvedDbUri,
+    uri: MONGO_URI,
   },
 
   jwt: {

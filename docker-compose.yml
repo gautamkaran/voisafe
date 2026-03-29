@@ -1,38 +1,37 @@
 services:
-  mongo:
-    image: mongo:7
-    container_name: voisafe-mongo
-    restart: unless-stopped
-    volumes:
-      - mongo_data:/data/db
-
-  backend:
-    build:
-      context: ./backend
-    container_name: voisafe-backend
-    restart: unless-stopped
-    depends_on:
-      - mongo
-    environment:
-      DB_URI: mongodb://mongo:27017/voisafe
-      PORT: 3000
-      JWT_SECRET: "your_jwt_secret_key"
-      JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
-      FRONTEND_URL: "http://localhost:5173"
-    ports:
-      - "3000:3000"
-
   frontend:
-    build:
-      context: ./frontend
-      args:
-        VITE_API_URL: ${VITE_API_URL:-/api}
-    container_name: voisafe-frontend
+    image: gautamkaran/voisafe-frontend
+    ports:
+      - "5173:80"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-/api}
     restart: unless-stopped
     depends_on:
       - backend
+
+  backend:
+    image: gautamkaran/voisafe-backend
     ports:
-      - "5173:80"
+      - "3000:3000"
+    depends_on:
+      - db
+    restart: unless-stopped
+    environment:
+      MONGO_URI: "mongodb://db/voisafe"
+      JWT_SECRET: "your_jwt_secret_key"
+      JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
+      SUPER_ADMIN_EMAIL: "admin@voisafe.org"
+      SUPER_ADMIN: "admin123"
+      FRONTEND_URL: "http://frontend:5173"
+
+  db:
+    image: mongo:7
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
 volumes:
-  mongo_data:
+  mongo_data: {}
