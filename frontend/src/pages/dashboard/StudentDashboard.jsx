@@ -7,18 +7,39 @@ import {
   ArrowRight,
   ShieldCheck,
   TrendingUp,
-  MessageCircle
+  MessageCircle,
+  RefreshCw
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { API_URL } from '../../config/api';
 
 const StudentDashboard = () => {
   const user = JSON.parse(localStorage.getItem('voisafe_user') || 'null');
+  const [complaints, setComplaints] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
-  // Placeholder data for now
+  React.useEffect(() => {
+    const fetchMyStats = async () => {
+      try {
+        const token = localStorage.getItem('voisafe_token');
+        const res = await fetch(`${API_URL}/complaints/my`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) setComplaints(data.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMyStats();
+  }, []);
+
   const stats = [
-    { name: 'Total Grievances', value: '0', icon: FileText, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
-    { name: 'In Progress', value: '0', icon: Clock, color: 'text-amber-400', bg: 'bg-amber-400/10' },
-    { name: 'Resolved', value: '0', icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
+    { name: 'Total Grievances', value: complaints.length, icon: FileText, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
+    { name: 'In Progress', value: complaints.filter(c => c.status === 'in-progress').length, icon: Clock, color: 'text-amber-400', bg: 'bg-amber-400/10' },
+    { name: 'Resolved', value: complaints.filter(c => c.status === 'resolved').length, icon: CheckCircle2, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
   ];
 
   return (
@@ -70,15 +91,40 @@ const StudentDashboard = () => {
               </Link>
            </div>
            
-           {/* Placeholder for Empty State */}
-           <div className="glass-card rounded-3xl p-8 sm:p-12 text-center border-dashed border-2 border-white/5">
-              <div className="w-20 h-20 bg-slate-800/50 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                 <FileText className="w-10 h-10 text-slate-500" />
+           {/* Activity Display */}
+           {loading ? (
+              <div className="flex justify-center p-20">
+                 <RefreshCw className="animate-spin text-slate-800" size={32} />
               </div>
-              <h4 className="text-xl font-bold text-white mb-2">No grievances found</h4>
-              <p className="text-slate-500 max-w-xs mx-auto mb-8">You haven't submitted any grievances yet. Your identity will be 100% protected when you do.</p>
-              <Link to="/dashboard/submit" className="text-indigo-400 font-bold hover:underline">Start your first report</Link>
-           </div>
+           ) : complaints.length === 0 ? (
+              <div className="glass-card rounded-3xl p-8 sm:p-12 text-center border-dashed border-2 border-white/5">
+                 <div className="w-20 h-20 bg-slate-800/50 rounded-3xl flex items-center justify-center mx-auto mb-6">
+                    <FileText className="w-10 h-10 text-slate-500" />
+                 </div>
+                 <h4 className="text-xl font-bold text-white mb-2">No grievances found</h4>
+                 <p className="text-slate-500 max-w-xs mx-auto mb-8">You haven't submitted any grievances yet. Your identity will be 100% protected when you do.</p>
+                 <Link to="/dashboard/submit" className="text-indigo-400 font-bold hover:underline">Start your first report</Link>
+              </div>
+           ) : (
+             <div className="space-y-4">
+               {complaints.slice(0, 3).map(c => (
+                 <Link to="/dashboard/grievances" key={c._id} className="block group">
+                    <div className="glass-card rounded-2xl p-5 border border-white/5 group-hover:bg-white/[0.02] transition-all flex items-center justify-between">
+                       <div className="flex items-center gap-4">
+                          <div className={`p-3 rounded-xl ${c.status === 'resolved' ? 'bg-emerald-500/10' : 'bg-amber-500/10'}`}>
+                             <FileText size={18} className={c.status === 'resolved' ? 'text-emerald-400' : 'text-amber-400'} />
+                          </div>
+                          <div>
+                             <p className="text-xs font-bold text-white uppercase tracking-tight">{c.title}</p>
+                             <p className="text-[10px] text-slate-500 uppercase tracking-widest mt-0.5">{c.status}</p>
+                          </div>
+                       </div>
+                       <ArrowRight size={16} className="text-slate-700 group-hover:text-white transition-colors" />
+                    </div>
+                 </Link>
+               ))}
+             </div>
+           )}
         </div>
 
         {/* Right Column: Information / Trust */}
@@ -109,9 +155,16 @@ const StudentDashboard = () => {
                  <div className="p-3 bg-amber-500/10 rounded-xl h-fit">
                     <MessageCircle className="w-6 h-6 text-amber-400" />
                  </div>
-                 <div>
-                    <h5 className="font-bold text-white mb-1">Direct Access</h5>
-                    <p className="text-sm text-slate-500 leading-relaxed">Chat anonymously with resolution committees in real-time.</p>
+                 <div className={`flex-1 ${complaints.length > 0 ? 'cursor-pointer group/chat' : ''}`}>
+                    <h5 className="font-bold text-white mb-1 group-hover/chat:text-amber-400 transition-colors">Direct Authority Link</h5>
+                    <p className="text-sm text-slate-500 leading-relaxed mb-3">Chat anonymously with resolution committees in real-time.</p>
+                    {complaints.length > 0 && (
+                      <Link to="/dashboard/grievances">
+                        <button className="text-[10px] font-black text-amber-400 uppercase tracking-widest bg-amber-400/10 px-4 py-2 rounded-xl border border-amber-400/20 hover:bg-amber-400/20 transition-all flex items-center gap-2">
+                           Open Anonymous Link <ArrowRight size={12} />
+                        </button>
+                      </Link>
+                    )}
                  </div>
               </div>
               

@@ -67,7 +67,7 @@ export const register = async (req, res, next) => {
         domain: domain,
         collegeCode: collegeCode,
         contactEmail: contactEmail,
-        status: "pending", // Requires Super Admin approval
+        status: "active", // Requires Super Admin approval
       });
     } else {
       // Student is registering
@@ -141,12 +141,14 @@ export const login = async (req, res, next) => {
       const org = await Organization.findById(user.orgId);
       if (org) {
         orgName = org.name;
+        /* 
         if (org.status === "pending") {
           return res.status(403).json({
             success: false,
             message: "Your institution is awaiting Super Admin approval. Please try again later.",
           });
         }
+        */
         if (org.status === "rejected") {
           return res.status(403).json({
             success: false,

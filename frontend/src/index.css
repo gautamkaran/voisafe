@@ -54,21 +54,30 @@
   50% { opacity: 0.6; filter: blur(140px); }
 }
 
-/* Custom Scrollbar for Premium Dark Theme */
+/* Custom Scrollbar for Premium Dark Theme - Minimal Visibility */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 4px; /* Very thin */
+  height: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #020617;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 5px;
-  border: 2px solid #020617;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

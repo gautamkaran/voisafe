@@ -4,14 +4,21 @@ import {
   approveOrganization,
   blockOrganization,
   createOrganization,
+  getMyOrganization,
+  updateMyOrganization
 } from "../controllers/admin.controller.js";
+import { authenticate, authorizeRoles, requireApprovedOrganization } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
 // Super Admin Routes
-router.get("/organizations", getAllOrganizations);
-router.post("/organizations/create", createOrganization);
-router.patch("/organizations/:id/approve", approveOrganization);
-router.patch("/organizations/:id/block", blockOrganization);
+router.get("/organizations", authenticate, authorizeRoles("superadmin"), getAllOrganizations); // Added auth/protect missing in original
+router.post("/organizations/create", authenticate, authorizeRoles("superadmin"), createOrganization);
+router.patch("/organizations/:id/approve", authenticate, authorizeRoles("superadmin"), approveOrganization);
+router.patch("/organizations/:id/block", authenticate, authorizeRoles("superadmin"), blockOrganization);
+
+// Org Admin Routes
+router.get("/my-organization", authenticate, authorizeRoles("admin"), getMyOrganization);
+router.patch("/my-organization", authenticate, requireApprovedOrganization, authorizeRoles("admin"), updateMyOrganization);
 
 export default router;

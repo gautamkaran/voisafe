@@ -21,6 +21,12 @@ import GlobalAnalyticsPage from "./pages/dashboard/superadmin/GlobalAnalyticsPag
 import SuperAdminSettingsPage from "./pages/dashboard/superadmin/SuperAdminSettingsPage";
 import CreateOrganizationPage from "./pages/dashboard/superadmin/CreateOrganizationPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ManageTeamsPage from "./pages/dashboard/admin/ManageTeamsPage";
+import ReportsPage from "./pages/dashboard/admin/ReportsPage";
+import OrganizationSettingsPage from "./pages/dashboard/admin/OrganizationSettingsPage";
+import ResolutionQueuePage from "./pages/dashboard/committee/ResolutionQueuePage";
+import MyGrievancesPage from "./pages/dashboard/student/MyGrievancesPage";
+import SubmitGrievancePage from "./pages/dashboard/student/SubmitGrievancePage";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -53,11 +59,19 @@ const App = () => {
             }
           >
             <Route index element={<DashboardSelector />} />
+            
+            <Route path="committees" element={<ProtectedRoute allowedRoles={["admin"]}><ManageTeamsPage /></ProtectedRoute>} />
+            <Route path="reports" element={<ProtectedRoute allowedRoles={["admin"]}><ReportsPage /></ProtectedRoute>} />
+            <Route path="student" element={<ProtectedRoute allowedRoles={["student"]}><StudentDashboard /></ProtectedRoute>} />
+            <Route path="submit" element={<ProtectedRoute allowedRoles={["student"]}><SubmitGrievancePage /></ProtectedRoute>} />
+            <Route path="grievances" element={<ProtectedRoute allowedRoles={["student"]}><MyGrievancesPage /></ProtectedRoute>} />
+            <Route path="settings" element={<ProtectedRoute allowedRoles={["admin", "superadmin"]}><OrganizationSettingsByRole/></ProtectedRoute>} />
+            <Route path="reviews" element={<ProtectedRoute allowedRoles={["admin", "committee"]}><ResolutionQueuePage /></ProtectedRoute>} />
+
             {/* Super Admin sub-pages */}
-            <Route path="institutions" element={<AllInstitutionsPage />} />
-            <Route path="create-org" element={<CreateOrganizationPage />} />
-            <Route path="analytics" element={<GlobalAnalyticsPage />} />
-            <Route path="settings" element={<SuperAdminSettingsPage />} />
+            <Route path="institutions" element={<ProtectedRoute allowedRoles={["superadmin"]}><AllInstitutionsPage /></ProtectedRoute>} />
+            <Route path="create-org" element={<ProtectedRoute allowedRoles={["superadmin"]}><CreateOrganizationPage /></ProtectedRoute>} />
+            <Route path="analytics" element={<ProtectedRoute allowedRoles={["superadmin"]}><GlobalAnalyticsPage /></ProtectedRoute>} />
           </Route>
         </Routes>
       </main>
@@ -87,6 +101,12 @@ const DashboardSelector = () => {
         </div>
       );
   }
+};
+
+const OrganizationSettingsByRole = () => {
+    const user = JSON.parse(localStorage.getItem("voisafe_user") || "null");
+    if (user?.role === 'superadmin') return <SuperAdminSettingsPage/>;
+    return <OrganizationSettingsPage/>;
 };
 
 export default App;

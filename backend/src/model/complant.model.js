@@ -57,6 +57,12 @@ const complaintSchema = new mongoose.Schema(
       enum: ["low", "medium", "high"],
       default: "medium",
     },
+    
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true },
 );
@@ -64,6 +70,7 @@ const complaintSchema = new mongoose.Schema(
 // 🔥 Indexes (performance boost)
 complaintSchema.index({ trackingId: 1 });
 complaintSchema.index({ orgId: 1 });
+complaintSchema.index({ userId: 1 });
 complaintSchema.index({ status: 1 });
 complaintSchema.index({ assignedTo: 1 });
 

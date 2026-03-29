@@ -114,3 +114,40 @@ export const createOrganization = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error: " + error.message });
   }
 };
+// @route   GET /api/admin/my-organization
+// @desc    Org Admin gets their own organization details
+export const getMyOrganization = async (req, res) => {
+  try {
+    const orgId = req.user.orgId;
+    if (!orgId) return res.status(400).json({ success: false, message: "Organization ID missing." });
+
+    const org = await Organization.findById(orgId);
+    if (!org) return res.status(404).json({ success: false, message: "Organization not found." });
+
+    res.json({ success: true, data: org });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// @route   PATCH /api/admin/my-organization
+// @desc    Org Admin updates institutional profile
+export const updateMyOrganization = async (req, res) => {
+  try {
+    const orgId = req.user.orgId;
+    if (!orgId) return res.status(400).json({ success: false, message: "Organization ID missing." });
+
+    const updates = req.body;
+    // Prevent sensitive field updates
+    delete updates.status;
+    delete updates.collegeCode;
+    delete updates.domain;
+
+    const org = await Organization.findByIdAndUpdate(orgId, updates, { new: true });
+    if (!org) return res.status(404).json({ success: false, message: "Organization not found." });
+
+    res.json({ success: true, message: "Institutional profile updated.", data: org });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};

@@ -1,4 +1,4 @@
-const API_ROOT = `${SERVER_URL}`;
+const SERVER_URL = 'http://localhost:3000/api';
 
-export const API_URL = API_ROOT;
-export const API_ADMIN_URL = `${API_ROOT}/admin`;
+export const API_URL = SERVER_URL;
+export const API_ADMIN_URL = `${SERVER_URL}/admin`;
