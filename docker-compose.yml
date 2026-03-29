@@ -13,11 +13,12 @@ services:
     restart: unless-stopped
     depends_on:
       - mongo
-    env_file:
-      - ./backend/.env
     environment:
       DB_URI: mongodb://mongo:27017/voisafe
       PORT: 3000
+      JWT_SECRET: "your_jwt_secret_key"
+      JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
+
     ports:
       - "3000:3000"
 
