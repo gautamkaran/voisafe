@@ -42,13 +42,13 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
-      <div className="absolute bottom-[-5%] right-[-5%] w-[600px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute top-[-10%] left-[-10%] w-125 h-125 bg-indigo-600/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
+      <div className="absolute bottom-[-5%] right-[-5%] w-150 h-150 bg-purple-600/20 rounded-full blur-[120px] mix-blend-screen pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         <div className="bg-slate-900/60 backdrop-blur-xl border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl">
           <div className="text-center mb-10">
-            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 mb-2">
+            <h1 className="text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400 mb-2">
               Welcome Back
             </h1>
             <p className="text-slate-400 font-medium">
@@ -102,7 +102,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-8 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all hover:scale-[1.02] flex items-center justify-center disabled:opacity-70 disabled:hover:scale-100"
+              className="w-full mt-8 bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-400 hover:to-purple-400 text-white font-bold py-4 rounded-xl shadow-[0_0_20px_rgba(99,102,241,0.3)] transition-all hover:scale-[1.02] flex items-center justify-center disabled:opacity-70 disabled:hover:scale-100"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
