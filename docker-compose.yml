@@ -2,9 +2,7 @@ services:
   frontend:
     image: gautamkaran/voisafe-frontend
     ports:
-      - "5173:5173"
-    environment:
-      VITE_API_URL: ${VITE_API_URL:-/api}
+      - "4173:4173"
     restart: unless-stopped
     depends_on:
       - backend
@@ -22,7 +20,7 @@ services:
       JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
       SUPER_ADMIN_EMAIL: "admin@voisafe.org"
       SUPER_ADMIN: "admin123"
-      FRONTEND_URL: "http://frontend:5173"
+      FRONTEND_URL: "http://localhost:4173"
 
   db:
     image: mongo:7
