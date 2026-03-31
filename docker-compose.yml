@@ -1,8 +1,23 @@
 services:
+  caddy:
+    image: caddy:alpine
+    depends_on:
+      - frontend
+      - backend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    command: >
+      sh -c 'printf "gautamkaran.cloud {\n  reverse_proxy frontend:4173\n}\napi.gautamkaran.cloud {\n  reverse_proxy backend:3001\n}\n" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile'
+    restart: unless-stopped
+
   frontend:
     image: gautamkaran/voisafe-frontend
     ports:
-      - "4173:4173"
+      - "3000:3000"
     restart: unless-stopped
     depends_on:
       - backend
@@ -10,7 +25,7 @@ services:
   backend:
     image: gautamkaran/voisafe-backend
     ports:
-      - "3000:3000"
+      - "3001:3001"
     depends_on:
       - db
     restart: unless-stopped
@@ -20,7 +35,7 @@ services:
       JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
       SUPER_ADMIN_EMAIL: "admin@voisafe.org"
       SUPER_ADMIN: "admin123"
-      FRONTEND_URL: "http://localhost:4173"
+      FRONTEND_URL: "https://voisafe.gautamkaran.in"
 
   db:
     image: mongo:7
@@ -32,4 +47,6 @@ services:
       - mongo_data:/data/db
 
 volumes:
+  caddy_data:
+  caddy_config:
   mongo_data: {}
