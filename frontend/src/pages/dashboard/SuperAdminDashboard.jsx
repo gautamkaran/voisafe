@@ -105,7 +105,7 @@ const ConfirmDialog = ({ config, onConfirm, onCancel }) => {
   const m = meta[config.action];
 
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-70 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-slate-950/80 backdrop-blur-md"
@@ -113,7 +113,7 @@ const ConfirmDialog = ({ config, onConfirm, onCancel }) => {
       />
 
       {/* Dialog Box */}
-      <div className="relative w-full max-w-md bg-slate-900 border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden animate-fade-in-up">
+      <div className="relative w-full max-w-md bg-slate-900 border border-white/10 rounded-4xl shadow-2xl overflow-hidden animate-fade-in-up">
         {/* Icon Header */}
         <div className="flex flex-col items-center text-center p-8 pb-4">
           <div
@@ -170,7 +170,7 @@ const OrgDetailModal = ({ org, onClose, onAction, actionLoading }) => {
 
   return (
     <div
-      className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+      className="fixed inset-0 z-60 flex items-center justify-center p-4"
       onClick={onClose}
     >
       {/* Backdrop */}
@@ -178,7 +178,7 @@ const OrgDetailModal = ({ org, onClose, onAction, actionLoading }) => {
 
       {/* Panel */}
       <div
-        className="relative w-full max-w-2xl max-h-[90vh] flex flex-col bg-slate-900 border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden"
+        className="relative w-full max-w-2xl max-h-[90vh] flex flex-col bg-slate-900 border border-white/10 rounded-4xl shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -466,7 +466,7 @@ const SuperAdminDashboard = () => {
               </div>
               <h1 className="text-2xl sm:text-3xl font-black text-white leading-tight">
                 Institutional{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-sky-400 to-violet-400">
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 via-sky-400 to-violet-400">
                   Hub
                 </span>
               </h1>
@@ -579,7 +579,7 @@ const SuperAdminDashboard = () => {
                 {pagedOrgs.map((org) => (
                   <div key={org._id}>
                     {/* ── Main row ── */}
-                    <div className="flex flex-col md:grid md:grid-cols-12 gap-3 sm:gap-4 px-6 py-5 hover:bg-white/[0.02] transition-colors group">
+                    <div className="flex flex-col md:grid md:grid-cols-12 gap-3 sm:gap-4 px-6 py-5 hover:bg-white/2 transition-colors group">
                       {/* Name + email */}
                       <div className="col-span-4 flex items-center gap-4">
                         <div className="w-10 h-10 bg-indigo-500/10 rounded-xl flex items-center justify-center border border-indigo-500/10 shrink-0">

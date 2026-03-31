@@ -44,14 +44,15 @@ export default function Home() {
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-white mb-6 leading-[1.1]">
             Speak Up
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 via-violet-400 to-purple-400">
               Safely & Securely
             </span>
           </h1>
-          
+
           <p className="text-xl md:text-2xl text-slate-400 max-w-3xl mx-auto leading-relaxed mb-12 font-medium">
-            The next-generation anonymous grievance platform for students. 
-            Report issues without fear. Your identity remains perfectly protected.
+            The next-generation anonymous grievance platform for students.
+            Report issues without fear. Your identity remains perfectly
+            protected.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-5 justify-center">
@@ -71,14 +72,18 @@ export default function Home() {
       </section>
 
       {/* Features Section - Standard Grid */}
-      <section id="features" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 bg-slate-950/20">
+      <section
+        id="features"
+        className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 bg-slate-950/20"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
               Architecture of Trust
             </h2>
             <p className="text-xl text-slate-400 max-w-2xl mx-auto font-medium">
-              We've engineered every layer to ensure absolute anonymity and security.
+              We've engineered every layer to ensure absolute anonymity and
+              security.
             </p>
           </div>
 
@@ -87,9 +92,12 @@ export default function Home() {
               <div className="mb-6 inline-flex p-4 bg-indigo-500/10 rounded-2xl">
                 <Lock className="w-8 h-8 text-indigo-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Identity Decoupling</h3>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Identity Decoupling
+              </h3>
               <p className="text-slate-400 leading-relaxed">
-                Our protocol physically separates your personal profile from your grievances. Mathematically unlinkable.
+                Our protocol physically separates your personal profile from
+                your grievances. Mathematically unlinkable.
               </p>
             </div>
 
@@ -97,9 +105,12 @@ export default function Home() {
               <div className="mb-6 inline-flex p-4 bg-indigo-500/10 rounded-2xl">
                 <MessageSquare className="w-8 h-8 text-indigo-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Anonymous Chat</h3>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Anonymous Chat
+              </h3>
               <p className="text-slate-400 leading-relaxed">
-                Direct, encrypted communication with committees without ever revealing who you are.
+                Direct, encrypted communication with committees without ever
+                revealing who you are.
               </p>
             </div>
 
@@ -107,9 +118,12 @@ export default function Home() {
               <div className="mb-6 inline-flex p-4 bg-indigo-500/10 rounded-2xl">
                 <Shield className="w-8 h-8 text-indigo-400" />
               </div>
-              <h3 className="text-2xl font-bold text-white mb-3">AES-256 Encryption</h3>
+              <h3 className="text-2xl font-bold text-white mb-3">
+                AES-256 Encryption
+              </h3>
               <p className="text-slate-400 leading-relaxed">
-                Military-grade encryption protects your voice at rest and in transit. Your data remains perfectly safe.
+                Military-grade encryption protects your voice at rest and in
+                transit. Your data remains perfectly safe.
               </p>
             </div>
           </div>
@@ -117,38 +131,54 @@ export default function Home() {
       </section>
 
       {/* About Section - Simple Split */}
-      <section id="about" className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-white/5">
+      <section
+        id="about"
+        className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-white/5"
+      >
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-8 animate-fade-in-up">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 font-bold text-xs uppercase tracking-widest">
               Our Mission
             </div>
             <h2 className="text-5xl md:text-6xl font-bold text-white leading-[1.1]">
-              Democratizing <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 font-extrabold uppercase">Trust</span>
+              Democratizing <br />
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-violet-400 font-extrabold uppercase">
+                Trust
+              </span>
             </h2>
             <p className="text-xl text-slate-400 leading-relaxed font-medium">
-              VoiSafe was born to protect the voices that matter most. We believe institutional fairness is impossible without absolute, guaranteed anonymity.
+              VoiSafe was born to protect the voices that matter most. We
+              believe institutional fairness is impossible without absolute,
+              guaranteed anonymity.
             </p>
-            
+
             <div className="grid grid-cols-2 gap-8 pt-4 border-t border-white/5 mt-8">
               <div>
                 <div className="text-4xl font-bold text-white mb-1">100%</div>
-                <div className="text-slate-500 text-sm font-semibold uppercase tracking-wider uppercase">Anonymous</div>
+                <div className="text-slate-500 text-sm font-semibold uppercase tracking-wider">
+                  Anonymous
+                </div>
               </div>
               <div>
                 <div className="text-4xl font-bold text-white mb-1">Zero</div>
-                <div className="text-slate-500 text-sm font-semibold uppercase tracking-wider">Identity Leaks</div>
+                <div className="text-slate-500 text-sm font-semibold uppercase tracking-wider">
+                  Identity Leaks
+                </div>
               </div>
             </div>
           </div>
 
           <div className="relative group">
-            <div className="absolute -inset-4 bg-gradient-to-tr from-indigo-500 to-violet-600 rounded-[3rem] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity" />
-            <div className="relative glass-card rounded-[3rem] p-12 aspect-[4/3] flex flex-col justify-center items-center text-center shadow-2xl border border-white/10 shrink-0">
-               <Shield className="w-24 h-24 text-indigo-400 mb-8 animate-float" />
-               <h3 className="text-3xl font-bold text-white mb-4">The VoiSafe Promise</h3>
-               <p className="text-slate-400 max-w-sm">Every voice is protected through engineered invisibility. We empower the messenger by erasing the identity.</p>
+            <div className="absolute -inset-4 bg-linear-to-tr from-indigo-500 to-violet-600 rounded-[3rem] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity" />
+            <div className="relative glass-card rounded-[3rem] p-12 aspect-4/3 flex flex-col justify-center items-center text-center shadow-2xl border border-white/10 shrink-0">
+              <Shield className="w-24 h-24 text-indigo-400 mb-8 animate-float" />
+              <h3 className="text-3xl font-bold text-white mb-4">
+                The VoiSafe Promise
+              </h3>
+              <p className="text-slate-400 max-w-sm">
+                Every voice is protected through engineered invisibility. We
+                empower the messenger by erasing the identity.
+              </p>
             </div>
           </div>
         </div>
@@ -158,14 +188,22 @@ export default function Home() {
       <section className="relative py-24 px-4 sm:px-6 lg:px-8 z-10 border-t border-slate-800/50 bg-slate-950/20 backdrop-blur-xl">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-6 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            <div
+              className="space-y-6 animate-fade-in-up"
+              style={{ animationDelay: "0.2s" }}
+            >
               <div className="flex items-start gap-5 p-6 rounded-2xl bg-slate-900/60 shadow-xl border border-white/5 transition-transform hover:scale-[1.02]">
                 <div className="p-3 bg-indigo-500/20 rounded-xl">
                   <CheckCircle2 className="w-6 h-6 text-indigo-400" />
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-white mb-2">Protected Privacy</h4>
-                  <p className="text-slate-400">Advanced identity decoupling architecture guarantees your personal information is isolated.</p>
+                  <h4 className="text-xl font-bold text-white mb-2">
+                    Protected Privacy
+                  </h4>
+                  <p className="text-slate-400">
+                    Advanced identity decoupling architecture guarantees your
+                    personal information is isolated.
+                  </p>
                 </div>
               </div>
 
@@ -174,8 +212,13 @@ export default function Home() {
                   <BarChart3 className="w-6 h-6 text-violet-400" />
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-white mb-2">Live Progress Tracking</h4>
-                  <p className="text-slate-400">Monitor your complaint's journey in real-time with comprehensive status updates.</p>
+                  <h4 className="text-xl font-bold text-white mb-2">
+                    Live Progress Tracking
+                  </h4>
+                  <p className="text-slate-400">
+                    Monitor your complaint's journey in real-time with
+                    comprehensive status updates.
+                  </p>
                 </div>
               </div>
 
@@ -184,19 +227,31 @@ export default function Home() {
                   <Users className="w-6 h-6 text-purple-400" />
                 </div>
                 <div>
-                  <h4 className="text-xl font-bold text-white mb-2">Multi-Committee Support</h4>
-                  <p className="text-slate-400">Smart routing ensures your grievance reaches the appropriate designated authorities.</p>
+                  <h4 className="text-xl font-bold text-white mb-2">
+                    Multi-Committee Support
+                  </h4>
+                  <p className="text-slate-400">
+                    Smart routing ensures your grievance reaches the appropriate
+                    designated authorities.
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-8 animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
+            <div
+              className="space-y-8 animate-fade-in-up"
+              style={{ animationDelay: "0.4s" }}
+            >
               <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight">
-                Built for Institutions, <br/>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400 font-extrabold uppercase tracking-tight">Designed for Students.</span>
+                Built for Institutions, <br />
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-400 to-purple-400 font-extrabold uppercase tracking-tight">
+                  Designed for Students.
+                </span>
               </h2>
               <p className="text-xl text-slate-400 leading-relaxed">
-                Experience a platform where cutting-edge technology meets empathetic design. VoiSafe empowers you to drive change securely.
+                Experience a platform where cutting-edge technology meets
+                empathetic design. VoiSafe empowers you to drive change
+                securely.
               </p>
 
               <ul className="space-y-4">
@@ -207,8 +262,10 @@ export default function Home() {
                   "Comprehensive compliance reporting",
                 ].map((item, idx) => (
                   <li key={idx} className="flex items-center gap-3">
-                    <Award className="w-6 h-6 text-indigo-500 flex-shrink-0" />
-                    <span className="text-lg text-slate-300 font-medium">{item}</span>
+                    <Award className="w-6 h-6 text-indigo-500 shrink-0" />
+                    <span className="text-lg text-slate-300 font-medium">
+                      {item}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -227,15 +284,17 @@ export default function Home() {
       {/* CTA Section */}
       <section className="relative py-32 px-4 sm:px-6 lg:px-8 z-10 w-full flex justify-center">
         <div className="w-full max-w-6xl rounded-[3rem] overflow-hidden shadow-2xl relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-800" />
+          <div className="absolute inset-0 bg-linear-to-r from-indigo-600 via-indigo-700 to-purple-800" />
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
-          
+
           <div className="relative p-12 md:p-24 text-center text-white">
             <h2 className="text-5xl md:text-7xl font-black mb-8 leading-tight">
-              Ready to Claim <br/>Your Voice?
+              Ready to Claim <br />
+              Your Voice?
             </h2>
             <p className="text-xl md:text-2xl text-indigo-100/80 mb-12 max-w-3xl mx-auto font-medium">
-              Join thousands of students who have already safe-guarded their future. Submit your first anonymous grievance in under 2 minutes.
+              Join thousands of students who have already safe-guarded their
+              future. Submit your first anonymous grievance in under 2 minutes.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link to="/register">
