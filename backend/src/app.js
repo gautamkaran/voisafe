@@ -14,7 +14,7 @@ app.use(
     origin: [
       "http://localhost:5173",
       "http://localhost:5174",
-      config.frontend.url,
+      "https://voisafe.gautamkaran.cloud",
     ],
     credentials: true,
   }),

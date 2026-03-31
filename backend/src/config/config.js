@@ -8,7 +8,6 @@ const {
   JWT_EXPIRES_IN,
   JWT_REFRESH_SECRET,
   JWT_REFRESH_EXPIRES_IN,
-  FRONTEND_URL,
   SUPER_ADMIN_EMAIL,
   SUPER_ADMIN, // This is the password
 } = process.env;
@@ -34,10 +33,6 @@ const config = {
     expiresIn: process.env.JWT_EXPIRES_IN || "1d",
     refreshSecret: process.env.JWT_REFRESH_SECRET || "your_jwt_refresh_secret",
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
-  },
-
-  frontend: {
-    url: FRONTEND_URL || "http://localhost:5173",
   },
 
   admin: {

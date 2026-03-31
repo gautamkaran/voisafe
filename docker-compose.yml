@@ -35,7 +35,6 @@ services:
       JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
       SUPER_ADMIN_EMAIL: "admin@voisafe.org"
       SUPER_ADMIN: "admin123"
-      FRONTEND_URL: "https://voisafe.gautamkaran.cloud"
 
   db:
     image: mongo:7
