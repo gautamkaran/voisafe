@@ -5,7 +5,7 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
-    SERVER_URL: JSON.stringify("https://api.gautamkaran.cloud"),
+    SERVER_URL: JSON.stringify("https://api.gautamkaran.cloud/api"),
   },
   server: {
     port: 4173,
