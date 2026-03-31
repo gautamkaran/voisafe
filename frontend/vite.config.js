@@ -10,6 +10,6 @@ export default defineConfig({
   server: {
     port: 4173,
     host: true,
-    allowedHosts: ["gautamkaran.cloud", "api.gautamkaran.cloud"],
+    allowedHosts: ["voisafe.gautamkaran.cloud", "api.gautamkaran.cloud"],
   },
 });

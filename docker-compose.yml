@@ -11,7 +11,7 @@ services:
       - caddy_data:/data
       - caddy_config:/config
     command: >
-      sh -c 'printf "gautamkaran.cloud {\n  reverse_proxy frontend:4173\n}\napi.gautamkaran.cloud {\n  reverse_proxy backend:3001\n}\n" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile'
+      sh -c 'printf "voisafe.gautamkaran.cloud {\n  reverse_proxy frontend:4173\n}\napi.gautamkaran.cloud {\n  reverse_proxy backend:3001\n}\n" > /etc/caddy/Caddyfile && caddy run --config /etc/caddy/Caddyfile'
     restart: unless-stopped
 
   frontend:
@@ -35,7 +35,7 @@ services:
       JWT_REFRESH_SECRET: "your_jwt_refresh_secret_key"
       SUPER_ADMIN_EMAIL: "admin@voisafe.org"
       SUPER_ADMIN: "admin123"
-      FRONTEND_URL: "https://voisafe.gautamkaran.in"
+      FRONTEND_URL: "https://voisafe.gautamkaran.cloud"
 
   db:
     image: mongo:7
