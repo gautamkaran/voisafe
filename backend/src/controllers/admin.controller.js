@@ -1,3 +1,21 @@
+// @route   GET /api/admin/my-organization/members
+// @desc    Org Admin gets list of users in their organization
+export const getMyOrganizationMembers = async (req, res) => {
+  try {
+    const orgId = req.user.orgId;
+    if (!orgId)
+      return res
+        .status(400)
+        .json({ success: false, message: "Organization ID missing." });
+
+    const users = await User.find({ orgId }).select(
+      "_id name email role createdAt",
+    );
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
 import Organization from "../model/organization.model.js";
 import User from "../model/user.model.js";
 
@@ -17,10 +35,19 @@ export const approveOrganization = async (req, res) => {
     const org = await Organization.findByIdAndUpdate(
       req.params.id,
       { status: "active" },
-      { new: true }
+      { new: true },
     );
-    if (!org) return res.status(404).json({ success: false, message: "Organization not found" });
-    res.status(200).json({ success: true, message: `${org.name} has been approved.`, data: org });
+    if (!org)
+      return res
+        .status(404)
+        .json({ success: false, message: "Organization not found" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `${org.name} has been approved.`,
+        data: org,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -32,10 +59,19 @@ export const blockOrganization = async (req, res) => {
     const org = await Organization.findByIdAndUpdate(
       req.params.id,
       { status: "rejected" },
-      { new: true }
+      { new: true },
     );
-    if (!org) return res.status(404).json({ success: false, message: "Organization not found" });
-    res.status(200).json({ success: true, message: `${org.name} has been blocked.`, data: org });
+    if (!org)
+      return res
+        .status(404)
+        .json({ success: false, message: "Organization not found" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: `${org.name} has been blocked.`,
+        data: org,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }
@@ -46,33 +82,60 @@ export const blockOrganization = async (req, res) => {
 export const createOrganization = async (req, res) => {
   try {
     const {
-      orgName, domain, collegeCode, contactEmail, typeOfOrg, address, description,
-      adminName, adminEmail, adminPassword,
+      orgName,
+      domain,
+      collegeCode,
+      contactEmail,
+      typeOfOrg,
+      address,
+      description,
+      adminName,
+      adminEmail,
+      adminPassword,
     } = req.body;
 
     // Validate required fields
-    if (!orgName || !domain || !collegeCode || !contactEmail || !adminName || !adminEmail || !adminPassword) {
+    if (
+      !orgName ||
+      !domain ||
+      !collegeCode ||
+      !contactEmail ||
+      !adminName ||
+      !adminEmail ||
+      !adminPassword
+    ) {
       return res.status(400).json({
         success: false,
-        message: "Please fill all required fields (org details + admin credentials).",
+        message:
+          "Please fill all required fields (org details + admin credentials).",
       });
     }
 
     // Check for duplicate org
-    const existingOrg = await Organization.findOne({ $or: [{ collegeCode }, { domain: domain.toLowerCase() }] });
+    const existingOrg = await Organization.findOne({
+      $or: [{ collegeCode }, { domain: domain.toLowerCase() }],
+    });
     if (existingOrg) {
       return res.status(400).json({
         success: false,
-        message: existingOrg.collegeCode === collegeCode
-          ? "An organization with this College Code already exists."
-          : "An organization with this Domain already exists.",
+        message:
+          existingOrg.collegeCode === collegeCode
+            ? "An organization with this College Code already exists."
+            : "An organization with this Domain already exists.",
       });
     }
 
     // Check for duplicate admin email
-    const existingUser = await User.findOne({ email: adminEmail.toLowerCase() });
+    const existingUser = await User.findOne({
+      email: adminEmail.toLowerCase(),
+    });
     if (existingUser) {
-      return res.status(400).json({ success: false, message: "A user with this admin email already exists." });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "A user with this admin email already exists.",
+        });
     }
 
     // Create Organization — immediately active since Super Admin is creating it
@@ -84,7 +147,7 @@ export const createOrganization = async (req, res) => {
       typeOfOrg: typeOfOrg || "college",
       address: address || "",
       description: description || "",
-      status: "active",
+      status: "pending",
     });
 
     // Create Admin User linked to the new org
@@ -111,7 +174,9 @@ export const createOrganization = async (req, res) => {
     });
   } catch (error) {
     console.error("Create org error:", error);
-    res.status(500).json({ success: false, message: "Server error: " + error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error: " + error.message });
   }
 };
 // @route   GET /api/admin/my-organization
@@ -119,10 +184,16 @@ export const createOrganization = async (req, res) => {
 export const getMyOrganization = async (req, res) => {
   try {
     const orgId = req.user.orgId;
-    if (!orgId) return res.status(400).json({ success: false, message: "Organization ID missing." });
+    if (!orgId)
+      return res
+        .status(400)
+        .json({ success: false, message: "Organization ID missing." });
 
     const org = await Organization.findById(orgId);
-    if (!org) return res.status(404).json({ success: false, message: "Organization not found." });
+    if (!org)
+      return res
+        .status(404)
+        .json({ success: false, message: "Organization not found." });
 
     res.json({ success: true, data: org });
   } catch (error) {
@@ -135,7 +206,10 @@ export const getMyOrganization = async (req, res) => {
 export const updateMyOrganization = async (req, res) => {
   try {
     const orgId = req.user.orgId;
-    if (!orgId) return res.status(400).json({ success: false, message: "Organization ID missing." });
+    if (!orgId)
+      return res
+        .status(400)
+        .json({ success: false, message: "Organization ID missing." });
 
     const updates = req.body;
     // Prevent sensitive field updates
@@ -143,10 +217,19 @@ export const updateMyOrganization = async (req, res) => {
     delete updates.collegeCode;
     delete updates.domain;
 
-    const org = await Organization.findByIdAndUpdate(orgId, updates, { new: true });
-    if (!org) return res.status(404).json({ success: false, message: "Organization not found." });
+    const org = await Organization.findByIdAndUpdate(orgId, updates, {
+      new: true,
+    });
+    if (!org)
+      return res
+        .status(404)
+        .json({ success: false, message: "Organization not found." });
 
-    res.json({ success: true, message: "Institutional profile updated.", data: org });
+    res.json({
+      success: true,
+      message: "Institutional profile updated.",
+      data: org,
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server error" });
   }

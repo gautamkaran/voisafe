@@ -163,9 +163,9 @@ const OrgDetailModal = ({ org, onClose, onAction, actionLoading }) => {
   const formatDate = (d) =>
     d
       ? new Date(d).toLocaleString("en-IN", {
-          dateStyle: "medium",
-          timeStyle: "short",
-        })
+        dateStyle: "medium",
+        timeStyle: "short",
+      })
       : "—";
 
   return (
@@ -325,6 +325,7 @@ const SuperAdminDashboard = () => {
   const [selectedOrg, setSelectedOrg] = useState(null); // detail modal
   const [confirmConfig, setConfirmConfig] = useState(null); // confirm dialog
   const [currentPage, setCurrentPage] = useState(1);
+  const [filter, setFilter] = useState("pending"); // Filter by pending by default
   const PAGE_SIZE = 5;
 
   // Open confirm dialog before any action
@@ -348,7 +349,10 @@ const SuperAdminDashboard = () => {
   const fetchOrgs = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/organizations`);
+      const token = localStorage.getItem("voisafe_token");
+      const res = await fetch(`${API_BASE}/organizations`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const json = await res.json();
       if (json.success) setOrgs(json.data);
     } catch {
@@ -365,8 +369,10 @@ const SuperAdminDashboard = () => {
   const handleAction = async (id, action) => {
     setActionLoading(id + action);
     try {
+      const token = localStorage.getItem("voisafe_token");
       const res = await fetch(`${API_BASE}/organizations/${id}/${action}`, {
         method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
       if (json.success) {
@@ -387,11 +393,12 @@ const SuperAdminDashboard = () => {
   const pendingOrgs = orgs.filter((o) => o.status === "pending").length;
   const blockedOrgs = orgs.filter((o) => o.status === "rejected").length;
 
-  // Pagination
-  const totalPages = Math.max(1, Math.ceil(totalOrgs / PAGE_SIZE));
+  const filteredOrgs = filter === "all" ? orgs : orgs.filter(o => o.status === filter);
+  const totalOrgsFiltered = filteredOrgs.length;
+  const totalPages = Math.max(1, Math.ceil(totalOrgsFiltered / PAGE_SIZE));
   const pageStart = (currentPage - 1) * PAGE_SIZE;
   const pageEnd = pageStart + PAGE_SIZE;
-  const pagedOrgs = orgs.slice(pageStart, pageEnd);
+  const pagedOrgs = filteredOrgs.slice(pageStart, pageEnd);
 
   // Reset page when orgs list changes
   useEffect(() => {
@@ -526,15 +533,23 @@ const SuperAdminDashboard = () => {
         <div className="space-y-5 pb-10">
           <div className="flex items-center justify-between">
             <h3 className="text-xl sm:text-2xl font-bold text-white">
-              Institutional Oversight
+              Global Institution Registry
             </h3>
-            <button
-              onClick={fetchOrgs}
-              className="flex items-center gap-2 text-slate-400 hover:text-white text-sm font-bold transition-colors px-3 py-2 rounded-xl hover:bg-white/5"
-            >
-              <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
-              <span className="hidden sm:inline">Refresh</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setFilter(filter === "pending" ? "all" : "pending")}
+                className={`text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl transition-all ${filter === "pending" ? "bg-amber-500/20 text-amber-400 border border-amber-500/20" : "bg-white/5 text-slate-400 hover:text-white"}`}
+              >
+                {filter === "pending" ? "Showing Pending" : "Showing All Registry"}
+              </button>
+              <button
+                onClick={fetchOrgs}
+                className="flex items-center gap-2 text-slate-400 hover:text-white text-sm font-bold transition-colors px-3 py-2 rounded-xl hover:bg-white/5"
+              >
+                <RefreshCw size={15} className={loading ? "animate-spin" : ""} />
+                <span className="hidden sm:inline">Refresh</span>
+              </button>
+            </div>
           </div>
 
           {pendingOrgs > 0 && (
@@ -688,13 +703,13 @@ const SuperAdminDashboard = () => {
               <p className="text-xs text-slate-500 font-medium order-2 sm:order-1">
                 Showing{" "}
                 <span className="text-white font-bold">
-                  {Math.min(pageStart + 1, totalOrgs)}
+                  {Math.min(pageStart + 1, totalOrgsFiltered)}
                 </span>{" "}
                 –{" "}
                 <span className="text-white font-bold">
-                  {Math.min(pageEnd, totalOrgs)}
+                  {Math.min(pageEnd, totalOrgsFiltered)}
                 </span>{" "}
-                of <span className="text-white font-bold">{totalOrgs}</span>{" "}
+                of <span className="text-white font-bold">{totalOrgsFiltered}</span>{" "}
                 institutions
               </p>
 
@@ -715,11 +730,10 @@ const SuperAdminDashboard = () => {
                     <button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${
-                        page === currentPage
+                      className={`w-8 h-8 rounded-xl text-xs font-black transition-all ${page === currentPage
                           ? "bg-indigo-600 text-white shadow-lg shadow-indigo-600/20"
                           : "text-slate-500 hover:text-white hover:bg-white/10"
-                      }`}
+                        }`}
                     >
                       {page}
                     </button>

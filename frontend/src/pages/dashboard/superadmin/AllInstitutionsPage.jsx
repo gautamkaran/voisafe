@@ -49,7 +49,7 @@ const StatusBadge = ({ status }) => {
 const AllInstitutionsPage = () => {
   const [orgs, setOrgs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all"); // all | active | pending | rejected
+  const [filter, setFilter] = useState("pending"); // Show pending by default
   const [actionLoading, setActionLoading] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const PAGE_SIZE = 8;
@@ -57,7 +57,10 @@ const AllInstitutionsPage = () => {
   const fetchOrgs = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE}/organizations`);
+      const token = localStorage.getItem("voisafe_token");
+      const res = await fetch(`${API_BASE}/organizations`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       const json = await res.json();
       if (json.success) setOrgs(json.data);
     } catch {
@@ -77,8 +80,10 @@ const AllInstitutionsPage = () => {
   const handleAction = async (id, action) => {
     setActionLoading(id + action);
     try {
+      const token = localStorage.getItem("voisafe_token");
       const res = await fetch(`${API_BASE}/organizations/${id}/${action}`, {
         method: "PATCH",
+        headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
       if (json.success) {

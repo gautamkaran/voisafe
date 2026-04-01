@@ -63,6 +63,12 @@ const complaintSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    
+    remarks: {
+      type: String,
+      trim: true,
+      default: "",
+    },
   },
   { timestamps: true },
 );

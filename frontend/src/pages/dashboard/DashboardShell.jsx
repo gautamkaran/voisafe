@@ -59,7 +59,7 @@ const DashboardShell = () => {
     ],
     admin: [
       { name: "Summary", icon: LayoutDashboard, path: "/dashboard" },
-      { name: "Manage Teams", icon: Users, path: "/dashboard/committees" },
+      { name: "Member Directory", icon: Users, path: "/dashboard/committees" },
       { name: "Reports", icon: BarChart3, path: "/dashboard/reports" },
       { name: "Organization", icon: Settings, path: "/dashboard/settings" },
       { name: "Profile", icon: User, path: "/dashboard/profile" },
@@ -67,7 +67,7 @@ const DashboardShell = () => {
     superadmin: [
       { name: "Command Center", icon: LayoutDashboard, path: "/dashboard" },
       {
-        name: "All Institutions",
+        name: "Institution Registry",
         icon: Shield,
         path: "/dashboard/institutions",
       },

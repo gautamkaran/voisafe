@@ -9,11 +9,21 @@ import {
   Activity,
   Building2,
   PieChart,
-  RefreshCw
+  RefreshCw,
+  Mail,
+  CheckCircle2,
+  MoreVertical,
+  UserPlus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { API_URL } from '../../config/api';
+
+const roleBadge = {
+  committee: { label: 'Committee', cls: 'text-indigo-400 bg-indigo-400/10 border-indigo-400/20' },
+  student:   { label: 'Student',   cls: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/20' },
+  admin:     { label: 'Admin',     cls: 'text-violet-400 bg-violet-400/10 border-violet-400/20' },
+};
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -23,7 +33,9 @@ const AdminDashboard = () => {
     resolutionRate: 0,
     pendingComplaints: 0
   });
+  const [members, setMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [membersLoading, setMembersLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('voisafe_user') || 'null');
 
   const fetchStats = useCallback(async () => {
@@ -44,9 +56,28 @@ const AdminDashboard = () => {
     }
   }, []);
 
+  const fetchMembers = useCallback(async () => {
+    setMembersLoading(true);
+    try {
+      const token = localStorage.getItem('voisafe_token');
+      const res = await fetch(`${API_URL}/users/org`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMembers(data.data.slice(0, 5)); // Show top 5 recent members on dashboard
+      }
+    } catch {
+      console.error("Failed to fetch members");
+    } finally {
+      setMembersLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     fetchStats();
-  }, [fetchStats]);
+    fetchMembers();
+  }, [fetchStats, fetchMembers]);
 
   const dashboardStats = [
     { name: 'Organization Users', value: stats.totalUsers, icon: Users, color: 'text-indigo-400', bg: 'bg-indigo-400/10' },
@@ -109,49 +140,82 @@ const AdminDashboard = () => {
 
       {/* Charts / Data Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-10">
-        {/* Teams Overview */}
+        {/* Member Directory Overview */}
         <div className="lg:col-span-2 space-y-6">
            <div className="flex items-center justify-between mb-2">
-              <h3 className="text-2xl font-bold text-white">Management Queue</h3>
+              <h3 className="text-2xl font-bold text-white">Member Registry</h3>
               <div className="flex gap-2">
-                 <button onClick={fetchStats} className="p-2 border border-white/5 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-colors">
-                    <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
+                 <Link to="/dashboard/committees">
+                    <button className="flex items-center gap-2 px-4 py-2 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 text-xs font-bold rounded-xl border border-indigo-500/10 transition-all">
+                       View All Registry
+                    </button>
+                 </Link>
+                 <button onClick={() => {fetchStats(); fetchMembers();}} className="p-2 border border-white/5 rounded-lg text-slate-500 hover:text-white hover:bg-white/5 transition-colors">
+                    <RefreshCw size={18} className={membersLoading ? "animate-spin" : ""} />
                  </button>
               </div>
            </div>
            
-           {stats.totalUsers <= 1 ? (
-             <div className="glass-card rounded-[2.5rem] p-12 text-center border-dashed border-2 border-white/5">
-                <div className="w-20 h-20 bg-violet-500/10 rounded-3xl flex items-center justify-center mx-auto mb-6">
-                   <Users className="w-10 h-10 text-violet-400" />
+           <div className="glass-card rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
+              <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-4 border-b border-white/5 text-[10px] font-black text-slate-500 uppercase tracking-widest bg-white/[0.01]">
+                <div className="col-span-6">Identity</div>
+                <div className="col-span-4">Access Level</div>
+                <div className="col-span-2 text-right">Status</div>
+              </div>
+
+              {membersLoading ? (
+                <div className="py-20 text-center space-y-4">
+                  <RefreshCw className="w-10 h-10 text-indigo-500/20 mx-auto animate-spin" />
+                  <p className="text-slate-500 font-mono text-[10px] uppercase tracking-widest">Loading internal network...</p>
                 </div>
-                <h4 className="text-xl font-bold text-white mb-2">No resolution teams active</h4>
-                <p className="text-slate-500 max-w-sm mx-auto mb-8 leading-relaxed">
-                  Initial resolution committees have not yet been established for this organization.
-                </p>
-                <Link to="/dashboard/committees">
-                  <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl text-white font-bold transition-all shadow-xl shadow-indigo-600/20">
-                    Configure Teams
-                  </button>
-                </Link>
-             </div>
-           ) : (
-             <div className="glass-card rounded-[2.5rem] p-8 border border-white/5">
-                <div className="flex items-center justify-between mb-6">
-                   <h4 className="font-bold text-white">Member Identity Registry</h4>
-                   <span className="text-[10px] font-black text-indigo-400 uppercase tracking-widest bg-indigo-500/10 px-2 py-1 rounded-full">{stats.totalUsers} Total Members</span>
+              ) : members.length === 0 ? (
+                <div className="py-20 text-center px-10">
+                  <Users className="w-12 h-12 text-slate-700 mx-auto mb-4" />
+                  <p className="text-slate-500 font-medium italic mb-6">No identities registered in your organization yet.</p>
+                  <Link to="/dashboard/committees">
+                    <button className="bg-indigo-600 hover:bg-indigo-500 px-6 py-3 rounded-2xl text-white font-bold transition-all shadow-xl shadow-indigo-600/20">
+                      Configure Initial Teams
+                    </button>
+                  </Link>
                 </div>
-                <p className="text-slate-500 text-sm leading-relaxed mb-6">Your organization has {stats.totalUsers} registered participants. Committees are currently handling {stats.pendingComplaints} unresolved cases.</p>
-                <div className="flex gap-3">
-                   <Link to="/dashboard/committees" className="flex-1 bg-white/5 hover:bg-white/10 text-white font-bold py-3 rounded-2xl text-center transition-all">
-                     Manage Volunteers
-                   </Link>
-                   <Link to="/dashboard/reports" className="flex-1 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 font-bold py-3 rounded-2xl text-center transition-all border border-indigo-500/10">
-                     View Analytics
-                   </Link>
+              ) : (
+                <div className="divide-y divide-white/5">
+                  {members.map(member => {
+                    const badge = roleBadge[member.role] || roleBadge.student;
+                    return (
+                      <div key={member._id} className="flex flex-col md:grid md:grid-cols-12 gap-3 sm:gap-4 px-6 py-5 hover:bg-white/[0.02] group transition-colors">
+                        <div className="col-span-6 flex items-center gap-4">
+                          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 flex items-center justify-center font-black text-white text-sm border border-white/5 shrink-0">
+                            {member.name.charAt(0)}
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-bold text-white text-sm truncate uppercase tracking-tight group-hover:text-indigo-400 transition-colors">{member.name}</p>
+                            <p className="text-[10px] text-slate-500 font-mono flex items-center gap-1">
+                              <Mail size={10} className="opacity-30"/> {member.email}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="col-span-4 hidden md:flex md:items-center">
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${badge.cls}`}>
+                            {badge.label}
+                          </span>
+                        </div>
+                        <div className="col-span-2 hidden md:flex md:items-center justify-end">
+                          <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-400/5 px-2 py-1 rounded-lg">
+                            <CheckCircle2 size={12}/> OK
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                  <div className="p-4 bg-white/[0.01] text-center border-t border-white/5">
+                    <Link to="/dashboard/committees" className="text-[10px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center gap-2">
+                       Enter Full Registry Module <ArrowRight size={12} />
+                    </Link>
+                  </div>
                 </div>
-             </div>
-           )}
+              )}
+           </div>
         </div>
 
         {/* Analytics Summary */}

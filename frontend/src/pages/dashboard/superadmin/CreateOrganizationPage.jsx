@@ -52,7 +52,8 @@ const SuccessCard = ({ data, onReset }) => (
       </h2>
       <p className="text-slate-400 text-sm max-w-sm leading-relaxed">
         <strong className="text-emerald-400">{data.org.name}</strong> has been
-        created and is immediately active. The admin account is ready to log in.
+        onboarded in <strong className="text-amber-400 font-black">PENDING</strong> state. 
+        Once approved from the registry, the admin will receive full access.
       </p>
     </div>
 
@@ -147,9 +148,13 @@ const CreateOrganizationPage = () => {
 
     setLoading(true);
     try {
+      const token = localStorage.getItem("voisafe_token");
       const res = await fetch(`${API_BASE}/organizations/create`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify(form),
       });
       const json = await res.json();

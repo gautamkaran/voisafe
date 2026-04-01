@@ -22,7 +22,7 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const GrievanceChat = ({ complaintId }) => {
+const GrievanceChat = ({ complaintId, status }) => {
   const [msgs, setMsgs] = useState([]);
   const [newMsg, setNewMsg] = useState('');
   const [loading, setLoading] = useState(false);
@@ -112,20 +112,28 @@ const GrievanceChat = ({ complaintId }) => {
           )}
           <div ref={scrollRef} />
        </div>
-       <form onSubmit={onSend} className="p-3 border-t border-white/5 bg-white/[0.01] rounded-b-3xl">
-          <div className="relative">
-             <input 
-               type="text" 
-               value={newMsg}
-               onChange={e => setNewMsg(e.target.value)}
-               placeholder="Write an anonymous message..." 
-               className="w-full bg-slate-800/80 border border-white/5 rounded-2xl px-5 py-3.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold uppercase tracking-tight"
-             />
-             <button type="submit" disabled={loading} className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 transition-all active:scale-95 disabled:opacity-50 shadow-inner">
-               <Send size={14} />
-             </button>
-          </div>
-       </form>
+       {status === 'resolved' ? (
+         <div className="p-6 bg-slate-950/50 rounded-b-3xl border-t border-white/5 text-center">
+            <p className="text-[10px] font-black text-rose-400 uppercase tracking-[0.2em] flex items-center justify-center gap-2">
+               <Shield size={12} /> Conversation Terminated by Resolution Authority
+            </p>
+         </div>
+       ) : (
+         <form onSubmit={onSend} className="p-3 border-t border-white/5 bg-white/[0.01] rounded-b-3xl">
+            <div className="relative">
+               <input 
+                 type="text" 
+                 value={newMsg}
+                 onChange={e => setNewMsg(e.target.value)}
+                 placeholder="Write an anonymous message..." 
+                 className="w-full bg-slate-800/80 border border-white/5 rounded-2xl px-5 py-3.5 text-xs text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-bold uppercase tracking-tight"
+               />
+               <button type="submit" disabled={loading} className="absolute right-2 top-1/2 -translate-y-1/2 p-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-500 transition-all active:scale-95 disabled:opacity-50 shadow-inner">
+                 <Send size={14} />
+               </button>
+            </div>
+         </form>
+       )}
     </div>
   );
 };
@@ -323,8 +331,60 @@ const MyGrievancesPage = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-hidden flex flex-col pt-4 relative z-10 font-bold pb-4 h-[450px]">
-               <GrievanceChat complaintId={selected._id} />
+            <div className="flex gap-2 p-1.5 bg-slate-950/40 rounded-2xl border border-white/5 mb-6 relative z-10">
+               <button 
+                 onClick={() => setShowChat(false)}
+                 className={`flex-1 py-3 px-4 rounded-xl text-[10px] uppercase tracking-[0.2em] font-black transition-all flex items-center justify-center gap-2 ${!showChat ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white bg-white/[0.03]'}`}
+               >
+                 <FileText size={14} /> Details Audit
+               </button>
+               <button 
+                 onClick={() => setShowChat(true)}
+                 className={`flex-1 py-3 px-4 rounded-xl text-[10px] uppercase tracking-[0.2em] font-black transition-all flex items-center justify-center gap-2 ${showChat ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-500 hover:text-white bg-white/[0.03]'}`}
+               >
+                 <MessageSquare size={14} /> Anonymous Link
+               </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto relative z-10 font-bold pb-4 custom-scrollbar pr-1">
+               {!showChat ? (
+                 <div className="space-y-6 animate-fade-in">
+                    <div className="bg-slate-800/20 p-6 rounded-[2rem] border border-white/5 space-y-3">
+                       <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest flex items-center gap-1.5"><FileText size={12}/> Captured Signal</p>
+                       <p className="text-xs text-slate-300 leading-relaxed font-medium uppercase tracking-tight">{selected.description}</p>
+                    </div>
+
+                    {selected.remarks && (
+                      <div className="bg-indigo-500/5 border border-indigo-500/10 p-6 rounded-[2rem] space-y-4">
+                         <div className="flex items-center gap-3">
+                            <div className="p-2 bg-indigo-500/10 rounded-xl">
+                               <RefreshCw size={18} className="text-indigo-400 animate-pulse-slow" />
+                            </div>
+                            <h5 className="text-indigo-400 font-black text-xs uppercase tracking-widest">Authority Protocol Logs</h5>
+                         </div>
+                         <p className="text-[10px] text-slate-500 leading-relaxed font-bold uppercase">The resolution authority has logged the following progress protocol for this signal:</p>
+                         <div className="p-5 bg-indigo-500/10 rounded-2xl border border-indigo-500/10 italic text-slate-200 text-xs font-medium uppercase tracking-tighter">
+                            "{selected.remarks}"
+                         </div>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="bg-slate-900/40 p-4 rounded-2xl border border-white/5">
+                          <p className="text-[8px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1">Status</p>
+                          <StatusBadge status={selected.status} />
+                       </div>
+                       <div className="bg-slate-900/40 p-4 rounded-2xl border border-white/5 text-right">
+                          <p className="text-[8px] text-slate-500 font-black uppercase tracking-[0.2em] mb-1">Dispatched</p>
+                          <p className="text-xs text-white uppercase">{new Date(selected.createdAt).toLocaleDateString()}</p>
+                       </div>
+                    </div>
+                 </div>
+               ) : (
+                 <div className="h-[400px] animate-fade-in">
+                    <GrievanceChat complaintId={selected._id} status={selected.status} />
+                 </div>
+               )}
             </div>
           </div>
         </div>
