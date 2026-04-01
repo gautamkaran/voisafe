@@ -5,7 +5,7 @@
 This project now includes Docker support for:
 - `mongo` (MongoDB)
 - `backend` (Node/Express API)
-- `frontend` (Vite build served by Nginx)
+- `frontend` (Vite build)
 
 ### Prerequisites
 - Docker Desktop (with Compose support)
